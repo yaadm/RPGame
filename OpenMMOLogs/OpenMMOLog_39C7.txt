@@ -1,0 +1,24 @@
+[NetworkManager] AwakePriority 
+[NetworkManager] Awake mainZone 
+[AnchorManager] RegisterPortalAnchor ZoneAnchor 
+[AnchorManager] RegisterStartAnchor StartAnchor - Humans 
+[AnchorManager] RegisterStartAnchor StartAnchor - All 
+[AnchorManager] RegisterPortalAnchor PortalAnchor3 
+[AnchorManager] RegisterStartAnchor StartAnchor - Dwarves 
+[AnchorManager] RegisterPortalAnchor PortalAnchor2 
+[AreaManager] RegisterAreaPortal Login Sub Scene 1 
+[AnchorManager] RegisterPortalAnchor PortalAnchor1 
+[AnchorManager] RegisterStartAnchor StartAnchor - Elves 
+>>>>spawn subzones
+[AnchorManager] LoadSubScenes 1 
+[NetworkManager] StartServer 
+[DatabaseManager] Execute: DELETE FROM TableNetworkZones WHERE zone=?
+[DatabaseManager] InsertOrReplace: OpenMMO.Database.TableNetworkZones
+[Login Sub Scene 1] Loaded 
+[DatabaseManager] Invoking: SavePlayers
+[DatabaseManager] CloseConnection
+[NetworkManager] OnStopServer 
+[AnchorManager] UnRegisterPortalAnchor PortalAnchor3 
+[AnchorManager] UnRegisterStartAnchor StartAnchor - All 
+[AnchorManager] UnRegisterStartAnchor StartAnchor - Elves 
+[AreaManager] UnRegisterAreaPortal Login Sub Scene 1 

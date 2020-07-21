@@ -1,0 +1,52 @@
+[NetworkManager] Awake mainZone 
+[NetworkManager] AwakePriority 
+[AnchorManager] RegisterPortalAnchor PortalAnchor3 
+[AnchorManager] RegisterStartAnchor StartAnchor - Humans 
+[AnchorManager] RegisterStartAnchor StartAnchor - All 
+[AreaManager] RegisterAreaPortal Login Sub Scene 1 
+[AnchorManager] RegisterPortalAnchor ZoneAnchor 
+[AnchorManager] RegisterStartAnchor StartAnchor - Dwarves 
+[AnchorManager] RegisterPortalAnchor PortalAnchor1 
+[AnchorManager] RegisterStartAnchor StartAnchor - Elves 
+[AnchorManager] RegisterPortalAnchor PortalAnchor2 
+[NetworkManager] StartClient 
+[NetworkManager] ClientAuthenticate 
+[NetworkManager] OnClientConnect ID0 
+[NetworkManager] RequestUserLogout ID0  
+[NetworkManager] OnServerMessageResponseAuth ID0 Authenticated 
+[NetworkManager] RequestUserLogin ID0 yaadmas 
+[NetworkManager] OnServerMessageResponseUserLogin ID0 1 
+[NetworkManager] OnServerMessageResponse ID0 False  
+[NetworkManager] RequestPlayerLogin ID0 yaadmas yaadmas 
+[NetworkManager] OnServerMessageResponsePlayerSwitchServer 2 
+[AnchorManager] UnRegisterPortalAnchor ZoneAnchor 
+[AnchorManager] UnRegisterStartAnchor StartAnchor - All 
+[AnchorManager] UnRegisterStartAnchor StartAnchor - Elves 
+[AnchorManager] UnRegisterStartAnchor StartAnchor - Dwarves 
+[AnchorManager] UnRegisterStartAnchor StartAnchor - Humans 
+[AreaManager] RegisterAreaPortal Human Sub Scene 1 
+[AnchorManager] RegisterPortalAnchor PortalAnchor2 
+[AnchorManager] RegisterPortalAnchor PortalAnchor3 
+[AnchorManager] RegisterStartAnchor HS StartAnchor - Humans 
+[AnchorManager] RegisterPortalAnchor ZoneAnchor 
+[AnchorManager] RegisterPortalAnchor PortalAnchor1 
+[AnchorManager] UnRegisterPortalAnchor PortalAnchor1 
+[AnchorManager] UnRegisterPortalAnchor ZoneAnchor 
+[AnchorManager] UnRegisterPortalAnchor PortalAnchor2 
+[NetworkManager] OnClientSceneChanged ID0 
+[NetworkManager] OnClientSceneChanged ID0 
+[NetworkManager] OnClientConnect ID0 
+[NetworkManager] OnServerMessageResponseAutoAuth True  
+[AreaManager] RegisterAreaPortal Human Sub Scene 1 
+[AnchorManager] RegisterPortalAnchor PortalAnchor2 
+[AnchorManager] RegisterPortalAnchor PortalAnchor3 
+[AnchorManager] RegisterStartAnchor HS StartAnchor - Humans 
+[AnchorManager] RegisterPortalAnchor ZoneAnchor 
+[AnchorManager] RegisterPortalAnchor PortalAnchor1 
+[NetworkManager] OnClientSceneChanged ID0 
+[AnchorManager] RegisterPortalAnchor PortalAnchor2 
+[AnchorManager] RegisterPortalAnchor PortalAnchor3 
+[AnchorManager] RegisterPortalAnchor PortalAnchor1 
+[AnchorManager] UnRegisterPortalAnchor PortalAnchor3 
+[AnchorManager] UnRegisterPortalAnchor PortalAnchor1 
+[AnchorManager] UnRegisterPortalAnchor PortalAnchor2 
