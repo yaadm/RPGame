@@ -6,37 +6,41 @@ using OpenMMO.UI;
 
 namespace OpenMMO.UI
 {
-	
-	// ===================================================================================
-	// UIShortcut
-	// ===================================================================================
-	[RequireComponent(typeof(Button))]
-	public partial class UIShortcut : MonoBehaviour
-	{
 
-       	public Button button;
-       	public UIRoot uiPanel;
-       	public GameObject goPanel;
-       	
-       	// -------------------------------------------------------------------------------
-       	// OnEnable
-       	// -------------------------------------------------------------------------------
+    // ===================================================================================
+    // UIShortcut
+    // ===================================================================================
+    [RequireComponent(typeof(Button))]
+    public partial class UIShortcut : MonoBehaviour
+    {
+
+        public Button button;
+        public UIRoot uiPanel;
+        public GameObject goPanel;
+
+        // -------------------------------------------------------------------------------
+        // OnEnable
+        // -------------------------------------------------------------------------------
         void OnEnable()
-		{
-			button.onClick.SetListener(() => {
-			
-				if (uiPanel)
-					uiPanel.Toggle();
-				
-				if (goPanel)
-					goPanel.SetActive(!goPanel.activeSelf);
+        {
+            button.onClick.SetListener(() =>
+            {
 
+                if (uiPanel)
+                    uiPanel.Toggle();
+                else
+                    Debug.Log("OnClick() - faild no uiPanel");
+
+                if (goPanel)
+                    goPanel.SetActive(!goPanel.activeSelf);
+                else
+                    Debug.Log("OnClick() - faild no goPanel");
             });
 
         }
-		
-		// -------------------------------------------------------------------------------
-		
+
+        // -------------------------------------------------------------------------------
+
     }
 
 }

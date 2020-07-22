@@ -7,97 +7,97 @@ using OpenMMO.UI;
 namespace OpenMMO.Chat
 {
 
-	// ===================================================================================
-	// UIWindowChat
-	// ===================================================================================
-	[DisallowMultipleComponent]
-	public partial class UIWindowChat : UIRoot
-	{
-		
-		[Header("Chat Log Panel")]
-		public GameObject chatLog;
-		
-		[Header("Chat Slot Prefab")]
-		public UIChatSlot chatEntryPrefab;
-		
-		[Header("Chat Content View")]
-		public Transform contentViewport;
-		public ScrollRect scrollRect;
-		
-		[Header("Chat Buttons")]
-		public Button toggleChatLogButton;
-		public Image toggleChatLogButtonImage;
-		public Button sendButton;
-		
-		[Header("Chat Input Field")]
-		public InputField sendInputField;
-		
-		[Header("Chat Channel Buttons")]
-		public Button publicChannelButton;
-		public Button privateChannelButton;
-		public Button guildChannelButton;
-		public Button partyChannelButton;
-		public Button infoChannelButton;
-		
-		[Header("Chat Channel Ids")]
-		public string channelIdPublic 	= "public";
-		public string channelIdPrivate 	= "private";
-		public string channelIdGuild 	= "guild";
-		public string channelIdParty 	= "party";
-		public string channelIdInfo		= "info";
-		
-		[Header("Chat UI Icons")]
-		public Sprite maximizedImage;
-		public Sprite minimizedImage;
-		
-		[Header("Chat Send Keys")]
-		public KeyCode[] sendKeys = {KeyCode.Return, KeyCode.KeypadEnter};
-		
-		public int maxMessages = 100;
-		
-		public static UIWindowChat singleton;
-		
-		protected string channelId = "public";
-		
-		protected bool inputActive;
-		
-		// -------------------------------------------------------------------------------
-		// Awake
-		// -------------------------------------------------------------------------------
-		protected override void Awake()
-		{
-			singleton = this;
-			base.Awake();
-		}
-		
-		// -------------------------------------------------------------------------------
-		// Show
-		// -------------------------------------------------------------------------------
-		//public override void Show()
-		//{
-		//	base.Show();
-		//}
-		
-		// -------------------------------------------------------------------------------
-		// Update
-		// -------------------------------------------------------------------------------
-		protected override void Update()
-		{
-			
-			// -- check for 'Enter' pressed while Input has focus
-			
-			foreach (KeyCode enterKey in sendKeys)
-				if (Input.GetKeyDown(enterKey) && inputActive)
-					OnClickSendMessage();
-			
-			base.Update();
-		
-		}
-		
-		// -------------------------------------------------------------------------------
-		// ThrottledUpdate
-		// -------------------------------------------------------------------------------
-		protected override void ThrottledUpdate()
+    // ===================================================================================
+    // UIWindowChat
+    // ===================================================================================
+    [DisallowMultipleComponent]
+    public partial class UIWindowChat : UIRoot
+    {
+
+        [Header("Chat Log Panel")]
+        public GameObject chatLog;
+
+        [Header("Chat Slot Prefab")]
+        public UIChatSlot chatEntryPrefab;
+
+        [Header("Chat Content View")]
+        public Transform contentViewport;
+        public ScrollRect scrollRect;
+
+        [Header("Chat Buttons")]
+        public Button toggleChatLogButton;
+        public Image toggleChatLogButtonImage;
+        public Button sendButton;
+
+        [Header("Chat Input Field")]
+        public InputField sendInputField;
+
+        [Header("Chat Channel Buttons")]
+        public Button publicChannelButton;
+        public Button privateChannelButton;
+        public Button guildChannelButton;
+        public Button partyChannelButton;
+        public Button infoChannelButton;
+
+        [Header("Chat Channel Ids")]
+        public string channelIdPublic = "public";
+        public string channelIdPrivate = "private";
+        public string channelIdGuild = "guild";
+        public string channelIdParty = "party";
+        public string channelIdInfo = "info";
+
+        [Header("Chat UI Icons")]
+        public Sprite maximizedImage;
+        public Sprite minimizedImage;
+
+        [Header("Chat Send Keys")]
+        public KeyCode[] sendKeys = { KeyCode.Return, KeyCode.KeypadEnter };
+
+        public int maxMessages = 100;
+
+        public static UIWindowChat singleton;
+
+        protected string channelId = "public";
+
+        protected bool inputActive;
+
+        // -------------------------------------------------------------------------------
+        // Awake
+        // -------------------------------------------------------------------------------
+        protected override void Awake()
+        {
+            singleton = this;
+            base.Awake();
+        }
+
+        // -------------------------------------------------------------------------------
+        // Show
+        // -------------------------------------------------------------------------------
+        //public override void Show()
+        //{
+        //	base.Show();
+        //}
+
+        // -------------------------------------------------------------------------------
+        // Update
+        // -------------------------------------------------------------------------------
+        protected override void Update()
+        {
+
+            // -- check for 'Enter' pressed while Input has focus
+
+            foreach (KeyCode enterKey in sendKeys)
+                if (Input.GetKeyDown(enterKey) && inputActive)
+                    OnClickSendMessage();
+
+            base.Update();
+
+        }
+
+        // -------------------------------------------------------------------------------
+        // ThrottledUpdate
+        // -------------------------------------------------------------------------------
+        protected override void ThrottledUpdate()
         {
             if (!networkManager || networkManager.state != Network.NetworkState.Game)
                 Hide();
@@ -105,17 +105,17 @@ namespace OpenMMO.Chat
                 Show();
 
             sendButton.interactable = !String.IsNullOrWhiteSpace(sendInputField.text);
-			sendButton.onClick.SetListener(() 				=> { OnClickSendMessage(); });
-			
-			toggleChatLogButton.onClick.SetListener(() 		=> { OnClickToggleMinimized(); });
-			
-			publicChannelButton.onClick.SetListener(() 		=> { OnClickSwitchChannelPublic(); });
-			privateChannelButton.onClick.SetListener(() 	=> { OnClickSwitchChannelPrivate(); });
-			guildChannelButton.onClick.SetListener(() 		=> { OnClickSwitchChannelGuild(); });
-			partyChannelButton.onClick.SetListener(() 		=> { OnClickSwitchChannelParty(); });
-			infoChannelButton.onClick.SetListener(() 		=> { OnClickSwitchChannelInfo(); });
-			
-		}
+            sendButton.onClick.SetListener(() => { OnClickSendMessage(); });
+
+            toggleChatLogButton.onClick.SetListener(() => { OnClickToggleMinimized(); });
+
+            publicChannelButton.onClick.SetListener(() => { OnClickSwitchChannelPublic(); });
+            privateChannelButton.onClick.SetListener(() => { OnClickSwitchChannelPrivate(); });
+            guildChannelButton.onClick.SetListener(() => { OnClickSwitchChannelGuild(); });
+            partyChannelButton.onClick.SetListener(() => { OnClickSwitchChannelParty(); });
+            infoChannelButton.onClick.SetListener(() => { OnClickSwitchChannelInfo(); });
+
+        }
 
         // =============================== BUTTON HANDLERS ===============================
 
@@ -134,7 +134,7 @@ namespace OpenMMO.Chat
 
             inputActive = true;
         }
-        
+
         //ONCLICK TOGGLE MINIMIZED
         public void OnClickToggleMinimized()
         {
@@ -163,86 +163,86 @@ namespace OpenMMO.Chat
             chatLog.SetActive(true);
             toggleChatLogButtonImage.sprite = maximizedImage;
         }
-		
-		// -------------------------------------------------------------------------------
-		// OnClickSwitchChannelPublic
-		// -------------------------------------------------------------------------------
-		public void OnClickSwitchChannelPublic()
-		{	
-			channelId = channelIdPublic;
-			sendButton.interactable = true;
-		}
-		
-		// -------------------------------------------------------------------------------
-		// OnClickSwitchChannelPrivate
-		// -------------------------------------------------------------------------------
-		public void OnClickSwitchChannelPrivate()
-		{	
-			channelId = channelIdPrivate;
-			sendButton.interactable = true;
-		}
-		
-		// -------------------------------------------------------------------------------
-		// OnClickSwitchChannelGuild
-		// -------------------------------------------------------------------------------
-		public void OnClickSwitchChannelGuild()
-		{	
-			channelId = channelIdGuild;
-			sendButton.interactable = true;
-		}
-		
-		// -------------------------------------------------------------------------------
-		// OnClickSwitchChannelParty
-		// -------------------------------------------------------------------------------
-		public void OnClickSwitchChannelParty()
-		{	
-			channelId = channelIdParty;
-			sendButton.interactable = true;
-		}
-		
-		// -------------------------------------------------------------------------------
-		// OnClickSwitchChannelInfo
-		// -------------------------------------------------------------------------------
-		public void OnClickSwitchChannelInfo()
-		{	
-			channelId = channelIdInfo;
-			sendButton.interactable = false;
-		}
-		
-		// -------------------------------------------------------------------------------
-		// OnInputFieldChange
-		// -------------------------------------------------------------------------------
-		public void OnInputFieldChange()
-		{
-			inputActive = true;
-		}	
-		
-		// =============================== UPDATE HANDLERS ===============================
-		
-		// -------------------------------------------------------------------------------
-		// OnReceiveChatMessage
-		// -------------------------------------------------------------------------------
-		public void OnReceiveChatMessage(ChatMessage message)
-		{
-			
-			if (contentViewport.childCount >= maxMessages)
-			{
-				for (int i = 0; i < maxMessages / 2; ++i)
-                	Destroy(contentViewport.GetChild(i).gameObject);
-			}
-			
-			GameObject go = Instantiate(chatEntryPrefab.gameObject, contentViewport.transform, true);
-			
-			go.GetComponent<UIChatSlot>().Init(message);
-		
-			Canvas.ForceUpdateCanvases();
-       	 	scrollRect.verticalNormalizedPosition = 0;
-        
-		}
-		
-		// -------------------------------------------------------------------------------
-		
-	}
+
+        // -------------------------------------------------------------------------------
+        // OnClickSwitchChannelPublic
+        // -------------------------------------------------------------------------------
+        public void OnClickSwitchChannelPublic()
+        {
+            channelId = channelIdPublic;
+            sendButton.interactable = true;
+        }
+
+        // -------------------------------------------------------------------------------
+        // OnClickSwitchChannelPrivate
+        // -------------------------------------------------------------------------------
+        public void OnClickSwitchChannelPrivate()
+        {
+            channelId = channelIdPrivate;
+            sendButton.interactable = true;
+        }
+
+        // -------------------------------------------------------------------------------
+        // OnClickSwitchChannelGuild
+        // -------------------------------------------------------------------------------
+        public void OnClickSwitchChannelGuild()
+        {
+            channelId = channelIdGuild;
+            sendButton.interactable = true;
+        }
+
+        // -------------------------------------------------------------------------------
+        // OnClickSwitchChannelParty
+        // -------------------------------------------------------------------------------
+        public void OnClickSwitchChannelParty()
+        {
+            channelId = channelIdParty;
+            sendButton.interactable = true;
+        }
+
+        // -------------------------------------------------------------------------------
+        // OnClickSwitchChannelInfo
+        // -------------------------------------------------------------------------------
+        public void OnClickSwitchChannelInfo()
+        {
+            channelId = channelIdInfo;
+            sendButton.interactable = false;
+        }
+
+        // -------------------------------------------------------------------------------
+        // OnInputFieldChange
+        // -------------------------------------------------------------------------------
+        public void OnInputFieldChange()
+        {
+            inputActive = true;
+        }
+
+        // =============================== UPDATE HANDLERS ===============================
+
+        // -------------------------------------------------------------------------------
+        // OnReceiveChatMessage
+        // -------------------------------------------------------------------------------
+        public void OnReceiveChatMessage(ChatMessage message)
+        {
+
+            if (contentViewport.childCount >= maxMessages)
+            {
+                for (int i = 0; i < maxMessages / 2; ++i)
+                    Destroy(contentViewport.GetChild(i).gameObject);
+            }
+
+            GameObject go = Instantiate(chatEntryPrefab.gameObject, contentViewport.transform, true);
+
+            go.GetComponent<UIChatSlot>().Init(message);
+
+            Canvas.ForceUpdateCanvases();
+            scrollRect.verticalNormalizedPosition = 0;
+
+        }
+
+        // -------------------------------------------------------------------------------
+
+    }
 
 }
 

@@ -2,22 +2,23 @@
 using UnityEngine;
 using OpenMMO.UI;
 
-namespace OpenMMO.Chat
+namespace OpenMMO.Settings
 {
-	[DisallowMultipleComponent]
-	public partial class UIWindowSettings : UIRoot
-	{
-		[Header("Settings Panel")]
-		public GameObject settingsPanel;
+    [DisallowMultipleComponent]
+    public partial class UIWindowSettings : UIRoot
+    {
+        [Header("Settings Panel")]
+        public GameObject settingsPanel;
 
-		public static UIWindowSettings singleton;
-		
+        public static UIWindowSettings singleton;
+
         //AWAKE
-		protected override void Awake()
-		{
-			singleton = this;
-			base.Awake();
-		}
+        protected override void Awake()
+        {
+            singleton = this;
+            base.Awake();
+            this.transform.parent.gameObject.SetActive(false);
+        }
         //THROTTLED UPDATE
         protected override void ThrottledUpdate()
         {
@@ -25,7 +26,7 @@ namespace OpenMMO.Chat
                 Hide();
             else
                 Show();
-		}
-	}
+        }
+    }
 
 }
