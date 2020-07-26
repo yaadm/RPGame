@@ -18,4 +18,4 @@ MonoBehaviour:
   scene:
     sceneAsset: {fileID: 102900000, guid: 913676aef7fa944c58f26f01ee7b916d, type: 3}
     sceneName: Human Scene
-  zoneTimeoutMultiplier: 6
+  zoneTimeoutMultiplier: 0

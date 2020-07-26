@@ -18,4 +18,4 @@ MonoBehaviour:
   scene:
     sceneAsset: {fileID: 102900000, guid: efab4b593687b4bf3ac2a8f64be148b6, type: 3}
     sceneName: Elf Scene
-  zoneTimeoutMultiplier: 6
+  zoneTimeoutMultiplier: 0
