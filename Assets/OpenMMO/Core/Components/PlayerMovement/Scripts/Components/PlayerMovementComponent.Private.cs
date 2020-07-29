@@ -52,53 +52,57 @@ namespace OpenMMO
 
                 Vector3 newVelocity = Vector3.zero;
 
-                if (verticalMovementInput > 0)                                  // -- Movement: Forward
-                {
-                    float factor = running ? movementConfig.runSpeedScale : movementConfig.walkSpeedScale;
-                    newVelocity = direction * verticalMovementInput * agent.speed * factor * movementConfig.moveSpeedMultiplier;
-                }
-                else if (verticalMovementInput < 0)                             // -- Movement: Backward
-                {
-                    float factor = running ? movementConfig.runSpeedScale : movementConfig.walkSpeedScale;
-                    newVelocity = direction * Mathf.Abs(verticalMovementInput) * agent.speed * factor * movementConfig.backpedalSpeedScale * movementConfig.moveSpeedMultiplier;
-                }
-                else if (horizontalMovementInput != 0 && !strafeLeft && !strafeRight) //STRAFE
-                {
-                    //NOTE: We do not want to factor run speed into strafing...we do not want both multipliers to make diagonal speed faster than forward speed.
-                    //float factor = running ? config.runSpeedScale : config.walkSpeedScale; 
-                    newVelocity += direction * agent.speed * movementConfig.strafeSpeedScale * movementConfig.moveSpeedMultiplier;
-                }
+                float factor = running ? movementConfig.runSpeedScale : movementConfig.walkSpeedScale;
+                newVelocity = direction * agent.speed * factor * movementConfig.moveSpeedMultiplier;
 
-                //STRAFE LEFT
-                if (strafeLeft)
-                {
-                    if (!strafeRight) //NOTE: Holding both turn buttons cancels out turning
-                    {
-                        //direction = -agent.transform.right;
-                        //if (agent.velocity == Vector3.zero) agent.velocity = transform.forward.normalized; //FORWARD VELOCITY
-                        if (movementConfig.turnWhileStrafing) transform.Rotate(0, -1.0f * movementConfig.turnSpeedMultiplier * Time.deltaTime * 100f, 0); //TURN WHILE STRAFING
-                        newVelocity += -Camera.main.transform.right * agent.speed * movementConfig.strafeSpeedScale * movementConfig.moveSpeedMultiplier;
-                    }
-                }
-                //STRAFE RIGHT
-                else if (strafeRight)
-                {
-                    if (!strafeLeft) //NOTE: Holding both turn buttons cancels out turning
-                    {
-                        //direction = agent.transform.right;
-                        //if (agent.velocity == Vector3.zero) agent.velocity = transform.forward.normalized; //FORWARD VELOCITY
-                        if (movementConfig.turnWhileStrafing) transform.Rotate(0, 1.0f * movementConfig.turnSpeedMultiplier * Time.deltaTime * 100f, 0); //TURN WHILE STRAFING
-                                                                                                                                                         //newVelocity = direction * horizontalMovementInput * agent.speed * config.strafeSpeedScale * config.moveSpeedMultiplier;
-                        newVelocity += Camera.main.transform.right * agent.speed * movementConfig.strafeSpeedScale * movementConfig.moveSpeedMultiplier;
-                    }
+                // if (verticalMovementInput > 0)                                  // -- Movement: Forward
+                // {
+                //     float factor = running ? movementConfig.runSpeedScale : movementConfig.walkSpeedScale;
+                //     newVelocity = direction * verticalMovementInput * agent.speed * factor * movementConfig.moveSpeedMultiplier;
+                // }
+                // else if (verticalMovementInput < 0)                             // -- Movement: Backward
+                // {
+                //     float factor = running ? movementConfig.runSpeedScale : movementConfig.walkSpeedScale;
+                //     newVelocity = direction * Mathf.Abs(verticalMovementInput) * agent.speed * factor * movementConfig.backpedalSpeedScale * movementConfig.moveSpeedMultiplier;
+                // }
+                // else if (horizontalMovementInput != 0 && !strafeLeft && !strafeRight) //STRAFE
+                // {
+                //     //NOTE: We do not want to factor run speed into strafing...we do not want both multipliers to make diagonal speed faster than forward speed.
+                //     //float factor = running ? config.runSpeedScale : config.walkSpeedScale; 
+                //     newVelocity += direction * agent.speed * movementConfig.strafeSpeedScale * movementConfig.moveSpeedMultiplier;
+                // }
 
-                }
+                // //STRAFE LEFT
+                // if (strafeLeft)
+                // {
+                //     if (!strafeRight) //NOTE: Holding both turn buttons cancels out turning
+                //     {
+                //         //direction = -agent.transform.right;
+                //         //if (agent.velocity == Vector3.zero) agent.velocity = transform.forward.normalized; //FORWARD VELOCITY
+                //         if (movementConfig.turnWhileStrafing) transform.Rotate(0, -1.0f * movementConfig.turnSpeedMultiplier * Time.deltaTime * 100f, 0); //TURN WHILE STRAFING
+                //         newVelocity += -Camera.main.transform.right * agent.speed * movementConfig.strafeSpeedScale * movementConfig.moveSpeedMultiplier;
+                //     }
+                // }
+                // //STRAFE RIGHT
+                // else if (strafeRight)
+                // {
+                //     if (!strafeLeft) //NOTE: Holding both turn buttons cancels out turning
+                //     {
+                //         //direction = agent.transform.right;
+                //         //if (agent.velocity == Vector3.zero) agent.velocity = transform.forward.normalized; //FORWARD VELOCITY
+                //         if (movementConfig.turnWhileStrafing) transform.Rotate(0, 1.0f * movementConfig.turnSpeedMultiplier * Time.deltaTime * 100f, 0); //TURN WHILE STRAFING
+                //                                                                                                                                          //newVelocity = direction * horizontalMovementInput * agent.speed * config.strafeSpeedScale * config.moveSpeedMultiplier;
+                //         newVelocity += Camera.main.transform.right * agent.speed * movementConfig.strafeSpeedScale * movementConfig.moveSpeedMultiplier;
+                //     }
 
-                if (!strafeLeft && !strafeRight) transform.Rotate(0, horizontalMovementInput * movementConfig.turnSpeedMultiplier * Time.deltaTime * 100f, 0); //SET ROTATION - ON TRANSFORM - NOT WHILE STRAFING
+                // }
+
+                // if (!strafeLeft && !strafeRight) transform.Rotate(0, horizontalMovementInput * movementConfig.turnSpeedMultiplier * Time.deltaTime * 100f, 0); //SET ROTATION - ON TRANSFORM - NOT WHILE STRAFING
+
+                transform.LookAt(transform.position + agent.velocity, Vector3.up);
 
                 agent.velocity = newVelocity; //SET VELOCITY - ON NAVMESH AGENT
 
-                transform.LookAt(transform.position + agent.velocity, Vector3.up);
             }
             else
             {
