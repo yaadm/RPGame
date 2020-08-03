@@ -26,6 +26,8 @@ namespace OpenMMO
         protected bool strafeLeft;
         protected bool strafeRight;
 
+        protected float cameraYRotation;
+
         //RUN
         protected bool running;
 

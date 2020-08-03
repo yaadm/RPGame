@@ -30,6 +30,7 @@ namespace OpenMMO
         // -------------------------------------------------------------------------------
         protected virtual void UpdateVelocity()
         {
+            
             //FACE DIRECTION OF TRAVEL
             //if (movementConfig.faceCameraDirection && Camera.main) transform.LookAt(agent.velocity, Vector3.up);
 
@@ -38,71 +39,24 @@ namespace OpenMMO
                 Vector3 input = new Vector3(horizontalMovementInput, 0, verticalMovementInput);
                 if (input.magnitude > 1) input = input.normalized;
 
-                //Vector3 angles = transform.rotation.eulerAngles;
-                Vector3 angles =
-                    (
-                    (movementConfig.faceCameraDirection && Camera.main)
-                    ? new Vector3(transform.rotation.eulerAngles.x, Camera.main.transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z)
-                    : transform.rotation.eulerAngles
-                    );
-                angles.x = 0;
+                Vector3 angles;
+                angles = new Vector3(0, cameraYRotation, 0);
+                   
                 Quaternion rotation = Quaternion.Euler(angles);
 
                 Vector3 direction = rotation * input;
 
-                Vector3 newVelocity = Vector3.zero;
-
                 float factor = running ? movementConfig.runSpeedScale : movementConfig.walkSpeedScale;
-                newVelocity = direction * agent.speed * factor * movementConfig.moveSpeedMultiplier;
-
-                // if (verticalMovementInput > 0)                                  // -- Movement: Forward
-                // {
-                //     float factor = running ? movementConfig.runSpeedScale : movementConfig.walkSpeedScale;
-                //     newVelocity = direction * verticalMovementInput * agent.speed * factor * movementConfig.moveSpeedMultiplier;
+                Vector3 newVelocity = agent.transform.forward * agent.speed * factor * movementConfig.moveSpeedMultiplier;
+                // if (IsLocalPlayer) {
+                //     transform.LookAt(transform.position + newVelocity, Vector3.up);
                 // }
-                // else if (verticalMovementInput < 0)                             // -- Movement: Backward
-                // {
-                //     float factor = running ? movementConfig.runSpeedScale : movementConfig.walkSpeedScale;
-                //     newVelocity = direction * Mathf.Abs(verticalMovementInput) * agent.speed * factor * movementConfig.backpedalSpeedScale * movementConfig.moveSpeedMultiplier;
-                // }
-                // else if (horizontalMovementInput != 0 && !strafeLeft && !strafeRight) //STRAFE
-                // {
-                //     //NOTE: We do not want to factor run speed into strafing...we do not want both multipliers to make diagonal speed faster than forward speed.
-                //     //float factor = running ? config.runSpeedScale : config.walkSpeedScale; 
-                //     newVelocity += direction * agent.speed * movementConfig.strafeSpeedScale * movementConfig.moveSpeedMultiplier;
-                // }
+                transform.LookAt(transform.position + direction, Vector3.up);
+                //agent.SetDestination(transform.position + newVelocity);
+                
+                //agent.velocity = newVelocity; //SET VELOCITY - ON NAVMESH AGENT
 
-                // //STRAFE LEFT
-                // if (strafeLeft)
-                // {
-                //     if (!strafeRight) //NOTE: Holding both turn buttons cancels out turning
-                //     {
-                //         //direction = -agent.transform.right;
-                //         //if (agent.velocity == Vector3.zero) agent.velocity = transform.forward.normalized; //FORWARD VELOCITY
-                //         if (movementConfig.turnWhileStrafing) transform.Rotate(0, -1.0f * movementConfig.turnSpeedMultiplier * Time.deltaTime * 100f, 0); //TURN WHILE STRAFING
-                //         newVelocity += -Camera.main.transform.right * agent.speed * movementConfig.strafeSpeedScale * movementConfig.moveSpeedMultiplier;
-                //     }
-                // }
-                // //STRAFE RIGHT
-                // else if (strafeRight)
-                // {
-                //     if (!strafeLeft) //NOTE: Holding both turn buttons cancels out turning
-                //     {
-                //         //direction = agent.transform.right;
-                //         //if (agent.velocity == Vector3.zero) agent.velocity = transform.forward.normalized; //FORWARD VELOCITY
-                //         if (movementConfig.turnWhileStrafing) transform.Rotate(0, 1.0f * movementConfig.turnSpeedMultiplier * Time.deltaTime * 100f, 0); //TURN WHILE STRAFING
-                //                                                                                                                                          //newVelocity = direction * horizontalMovementInput * agent.speed * config.strafeSpeedScale * config.moveSpeedMultiplier;
-                //         newVelocity += Camera.main.transform.right * agent.speed * movementConfig.strafeSpeedScale * movementConfig.moveSpeedMultiplier;
-                //     }
-
-                // }
-
-                // if (!strafeLeft && !strafeRight) transform.Rotate(0, horizontalMovementInput * movementConfig.turnSpeedMultiplier * Time.deltaTime * 100f, 0); //SET ROTATION - ON TRANSFORM - NOT WHILE STRAFING
-
-                transform.LookAt(transform.position + agent.velocity, Vector3.up);
-
-                agent.velocity = newVelocity; //SET VELOCITY - ON NAVMESH AGENT
-
+                agent.velocity = newVelocity;
             }
             else
             {
@@ -125,7 +79,7 @@ namespace OpenMMO
         {
             if (isLocalPlayer && ReadyToMove()) // CHECK FOR THROTTLING
             {
-                Cmd_UpdateMovementState(new MovementStateInfo(transform.position, transform.rotation, verticalMovementInput, horizontalMovementInput, running, strafeLeft, strafeRight));
+                Cmd_UpdateMovementState(new MovementStateInfo(transform.position, transform.rotation, Camera.main.transform.eulerAngles.y, verticalMovementInput, horizontalMovementInput, running, strafeLeft, strafeRight));
                 LogMovement();
             }
 
@@ -167,6 +121,8 @@ namespace OpenMMO
 
             strafeLeft = moveState.movementStrafeLeft;
             strafeRight = moveState.movementStrafeRight;
+
+            cameraYRotation = moveState.cameraYRotation;
 
             UpdateVelocity();
             RpcCorrectClientPosition(transform.position, transform.rotation, agent.velocity);

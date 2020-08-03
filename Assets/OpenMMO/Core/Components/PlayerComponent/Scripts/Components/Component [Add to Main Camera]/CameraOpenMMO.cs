@@ -1,5 +1,6 @@
 
 using UnityEngine;
+using UnityEngine.EventSystems;
 using OpenMMO;
 
 namespace OpenMMO
@@ -43,6 +44,8 @@ namespace OpenMMO
         private float desiredDistance;
         private float correctedDistance;
 
+        private bool isCameraLocked = false;
+
         // -------------------------------------------------------------------------------
         // Start
         // -------------------------------------------------------------------------------
@@ -79,10 +82,24 @@ namespace OpenMMO
                     return;
             }
 
+            
+
             // If either mouse buttons are down, let the mouse govern camera position 
             // OR: if the input key is pressed and not currently any other input active
-            if (Input.GetMouseButton(0) || Input.GetMouseButton(1) || (Input.GetKey(hotKey) && !Tools.AnyInputFocused))
+            if (Input.GetMouseButton(0) || (Input.GetKey(hotKey) && !Tools.AnyInputFocused))
             {
+
+                if (isCameraLocked) {
+                    return;
+                }
+
+                // if mouse click on ui element, return.
+                if(EventSystem.current.IsPointerOverGameObject()){
+                    isCameraLocked = true;
+                    return;
+                }
+
+                
                 xDeg += Input.GetAxis("Mouse X") * xSpeed * 0.02f;
                 yDeg -= Input.GetAxis("Mouse Y") * ySpeed * 0.02f;
 
@@ -91,6 +108,8 @@ namespace OpenMMO
                     // make the player follow camera rotation
                     //target.eulerAngles = new Vector3(target.eulerAngles.x, transform.eulerAngles.y, target.eulerAngles.z);
                 }
+            } else {
+                isCameraLocked = false;
             }
             // otherwise, ease behind the target if any of the directional keys are pressed 
             // else if (Input.GetAxis("Vertical") != 0 || Input.GetAxis("Horizontal") != 0)

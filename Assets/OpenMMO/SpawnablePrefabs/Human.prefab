@@ -92,5 +92,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Human
       objectReference: {fileID: 0}
+    - target: {fileID: 8539800676653855757, guid: 646f03a0ef17d3b49962414b11da55f6,
+        type: 3}
+      propertyPath: m_StoppingDistance
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 646f03a0ef17d3b49962414b11da55f6, type: 3}
