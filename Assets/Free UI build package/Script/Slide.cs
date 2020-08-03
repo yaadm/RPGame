@@ -14,6 +14,8 @@ public class Slide : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+
+		if (slider)
 		Filler.fillAmount = slider.value;
 	}
 }
