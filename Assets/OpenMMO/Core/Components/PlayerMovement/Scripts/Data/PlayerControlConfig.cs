@@ -46,10 +46,6 @@ namespace OpenMMO
         public InputAxis moveAxisHorizontal = InputAxis.Horizontal;
         public InputAxis moveAxisVertical = InputAxis.Vertical;
 
-        //STRAFE
-        public KeyCode strafeLeftKey = KeyCode.Q;
-        public KeyCode strafeRightKey = KeyCode.E;
-
         [Header("Move Speed")]
         [Tooltip("How fast you can move.")]
         [Range(0, 10)] public float moveSpeedMultiplier = 1.0f;

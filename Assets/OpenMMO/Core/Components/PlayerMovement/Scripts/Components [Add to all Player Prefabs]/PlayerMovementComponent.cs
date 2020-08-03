@@ -23,9 +23,6 @@ namespace OpenMMO
         protected float horizontalMovementInput;
 
         //TURN
-        protected bool strafeLeft;
-        protected bool strafeRight;
-
         protected float cameraYRotation;
 
         //RUN
@@ -87,9 +84,7 @@ namespace OpenMMO
             //MOVE
             horizontalMovementInput = Input.GetAxis(movementConfig.moveAxisHorizontal.ToString());
             verticalMovementInput = Input.GetAxis(movementConfig.moveAxisVertical.ToString());
-            //STRAFE
-            strafeLeft = Input.GetKey(movementConfig.strafeLeftKey);
-            strafeRight = Input.GetKey(movementConfig.strafeRightKey);
+
             //RUN
             running = Input.GetKey(movementConfig.runKey);
 

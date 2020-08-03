@@ -31,39 +31,31 @@ namespace OpenMMO
         protected virtual void UpdateVelocity()
         {
             
-            //FACE DIRECTION OF TRAVEL
-            //if (movementConfig.faceCameraDirection && Camera.main) transform.LookAt(agent.velocity, Vector3.up);
+            Vector3 newVelocity = Vector3.zero;
 
-            if (verticalMovementInput != 0 || horizontalMovementInput != 0 || strafeLeft || strafeRight)
+            if (verticalMovementInput != 0 || horizontalMovementInput != 0)
             {
+
+                // make input vector without Y axis
                 Vector3 input = new Vector3(horizontalMovementInput, 0, verticalMovementInput);
                 if (input.magnitude > 1) input = input.normalized;
-
-                Vector3 angles;
-                angles = new Vector3(0, cameraYRotation, 0);
-                   
+                
+                // calc camera rotation to move relative to
+                Vector3 angles = new Vector3(0, IsLocalPlayer ? Camera.main.transform.eulerAngles.y : cameraYRotation, 0);
                 Quaternion rotation = Quaternion.Euler(angles);
 
+                // calc movement direction
                 Vector3 direction = rotation * input;
 
+                // calc movement speed factor
                 float factor = running ? movementConfig.runSpeedScale : movementConfig.walkSpeedScale;
-                Vector3 newVelocity = agent.transform.forward * agent.speed * factor * movementConfig.moveSpeedMultiplier;
-                // if (IsLocalPlayer) {
-                //     transform.LookAt(transform.position + newVelocity, Vector3.up);
-                // }
-                transform.LookAt(transform.position + direction, Vector3.up);
-                //agent.SetDestination(transform.position + newVelocity);
+                newVelocity = direction * agent.speed * factor * movementConfig.moveSpeedMultiplier;
                 
-                //agent.velocity = newVelocity; //SET VELOCITY - ON NAVMESH AGENT
+                transform.LookAt(agent.transform.position + direction, Vector3.up);
+                
+            }
 
-                agent.velocity = newVelocity;
-            }
-            else
-            {
-                // -- required?
-                if (agent.isOnNavMesh) agent.ResetPath();
-                agent.velocity = Vector3.zero;
-            }
+            agent.velocity = newVelocity;
 
         }
 
@@ -77,9 +69,9 @@ namespace OpenMMO
         [Client]
         protected override void FixedUpdateClient()
         {
-            if (isLocalPlayer && ReadyToMove()) // CHECK FOR THROTTLING
+            if (isLocalPlayer && ReadyToMove() && Camera.main) // CHECK FOR THROTTLING
             {
-                Cmd_UpdateMovementState(new MovementStateInfo(transform.position, transform.rotation, Camera.main.transform.eulerAngles.y, verticalMovementInput, horizontalMovementInput, running, strafeLeft, strafeRight));
+                Cmd_UpdateMovementState(new MovementStateInfo(transform.position, transform.rotation, Camera.main.transform.eulerAngles.y, verticalMovementInput, horizontalMovementInput, running));
                 LogMovement();
             }
 
@@ -118,9 +110,6 @@ namespace OpenMMO
             verticalMovementInput = Mathf.Clamp(moveState.verticalMovementInput, -1, 1);        // good enough for keyboard + controller
             horizontalMovementInput = Mathf.Clamp(moveState.horizontalMovementInput, -1, 1);    // good enough for keyboard + controller
             running = moveState.movementRunning;
-
-            strafeLeft = moveState.movementStrafeLeft;
-            strafeRight = moveState.movementStrafeRight;
 
             cameraYRotation = moveState.cameraYRotation;
 
