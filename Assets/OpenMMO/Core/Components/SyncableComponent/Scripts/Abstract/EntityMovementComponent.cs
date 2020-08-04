@@ -22,6 +22,8 @@ namespace OpenMMO {
 		[Header("Components")]
         public NavMeshAgent agent;
         public Animator animator;
+
+        public Rigidbody playerRigidbody;
         
 		// -- Component Cache
 		protected EntityComponent entityComponent;
@@ -29,7 +31,7 @@ namespace OpenMMO {
 		
 		// -------------------------------------------------------------------------------
 
-		[SyncVar] protected int state;
+		[SyncVar] protected int animationState;
 		
 		// -------------------------------------------------------------------------------
 		// Start
@@ -40,7 +42,7 @@ namespace OpenMMO {
     	
     		agent = GetComponent<NavMeshAgent>();
     		animator = GetComponent<Animator>();
-    		
+    		playerRigidbody.GetComponent<Rigidbody>();
     		entityComponent = GetComponent<EntityComponent>();
     		
         	base.Start();
@@ -58,7 +60,7 @@ namespace OpenMMO {
 			{	
    				if (stateTemplate.Value.GetIsActive(entityComponent))
    				{
-   					state = stateTemplate.Key;
+   					animationState = stateTemplate.Key;
    					return;
    				}
 			}
@@ -85,7 +87,7 @@ namespace OpenMMO {
 		protected override void LateUpdateClient()
 		{
 
-			if (state == 0)
+			if (animationState == 0)
 				return;
 
 			foreach(KeyValuePair<int, StateTemplate> stateTemplate in StateTemplate.data)	// each state
@@ -100,7 +102,7 @@ namespace OpenMMO {
 						if (anim.parameters.Any(x => x.name == stateName)) 					// has param?
 						{
 	
-							if (stateTemplate.Value.hash == state)							// is current state?
+							if (stateTemplate.Value.hash == animationState)							// is current state?
 							{
 								anim.SetBool(stateName, true);
 							}

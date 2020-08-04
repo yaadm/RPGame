@@ -52,10 +52,23 @@ namespace OpenMMO
                 newVelocity = direction * agent.speed * factor * movementConfig.moveSpeedMultiplier;
                 
                 transform.LookAt(agent.transform.position + direction, Vector3.up);
-                
-            }
+                //rigidbody.MovePosition(transform.position + newVelocity);
+                playerRigidbody.velocity = newVelocity;
 
-            agent.velocity = newVelocity;
+            }
+            
+             
+
+            // match animations to movement
+            // if(rigidbody.velocity != Vector3.zero){
+            //     state = 0;
+            //     animator.SetBool("Walk", true);
+            //     animator.SetBool("Idle", false);
+            // } else {
+            //     animator.SetBool("Walk", false);
+            //     animator.SetBool("Idle", true);
+            // }
+            // agent.velocity = newVelocity;
 
         }
 
@@ -128,8 +141,14 @@ namespace OpenMMO
         {
             if (isLocalPlayer) return; //IGNORE LOCAL CLIENTS //TODO: Are we positive that local player does not need correction?
 
-            agent.ResetPath();
-            agent.velocity = _velocity;
+            if (agent) {
+
+                agent.ResetPath();
+                agent.velocity = _velocity;
+            } else {
+                playerRigidbody.velocity = _velocity;
+            }
+
             transform.position = _position;
             transform.rotation = _rotation;
 
