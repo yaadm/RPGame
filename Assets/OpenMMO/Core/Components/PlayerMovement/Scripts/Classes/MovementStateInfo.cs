@@ -26,10 +26,12 @@ namespace OpenMMO
         public float horizontalMovementInput;
         public bool movementRunning;
 
+        public bool movementJump;
+
         // -------------------------------------------------------------------------------
         // MovementStruct (Constructor)
         // -------------------------------------------------------------------------------
-        public MovementStateInfo(Vector3 _position, Quaternion _rotation, float _cameraYRotation, float _verticalMovementInput, float _horizontalMovementInput, bool _movementRunning)
+        public MovementStateInfo(Vector3 _position, Quaternion _rotation, float _cameraYRotation, float _verticalMovementInput, float _horizontalMovementInput, bool _movementRunning, bool _movementJump)
         {
             //ORIENTATION
             position = _position;
@@ -40,6 +42,8 @@ namespace OpenMMO
             verticalMovementInput = _verticalMovementInput;
             horizontalMovementInput = _horizontalMovementInput;
             movementRunning = _movementRunning;
+            //JUMP
+            movementJump = _movementJump;
         }
 
         // -------------------------------------------------------------------------------

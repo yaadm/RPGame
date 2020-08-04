@@ -51,24 +51,30 @@ namespace OpenMMO
                 float factor = running ? movementConfig.runSpeedScale : movementConfig.walkSpeedScale;
                 newVelocity = direction * agent.speed * factor * movementConfig.moveSpeedMultiplier;
                 
-                transform.LookAt(agent.transform.position + direction, Vector3.up);
-                //rigidbody.MovePosition(transform.position + newVelocity);
-                playerRigidbody.velocity = newVelocity;
+                transform.LookAt(transform.position + direction, Vector3.up);
+                
+                newVelocity.y = playerRigidbody.velocity.y;
 
+                if (agent && agent.isActiveAndEnabled) {
+                    agent.velocity = newVelocity;
+                } else {
+
+                    playerRigidbody.velocity = newVelocity;
+                }
             }
             
-             
+            
 
-            // match animations to movement
-            // if(rigidbody.velocity != Vector3.zero){
-            //     state = 0;
-            //     animator.SetBool("Walk", true);
-            //     animator.SetBool("Idle", false);
-            // } else {
-            //     animator.SetBool("Walk", false);
-            //     animator.SetBool("Idle", true);
-            // }
-            // agent.velocity = newVelocity;
+            if (jump && isGrounded) {
+                jump = false;
+
+                if (agent && agent.isActiveAndEnabled) {
+                    agent.velocity += Vector3.up * agent.speed * movementConfig.jumpSpeedScale * movementConfig.jumpSpeedMultiplier;
+                } else {
+
+                    playerRigidbody.AddForce(0,agent.speed * movementConfig.jumpSpeedScale * movementConfig.jumpSpeedMultiplier,0, ForceMode.Impulse);
+                }
+            }
 
         }
 
@@ -84,7 +90,7 @@ namespace OpenMMO
         {
             if (isLocalPlayer && ReadyToMove() && Camera.main) // CHECK FOR THROTTLING
             {
-                Cmd_UpdateMovementState(new MovementStateInfo(transform.position, transform.rotation, Camera.main.transform.eulerAngles.y, verticalMovementInput, horizontalMovementInput, running));
+                Cmd_UpdateMovementState(new MovementStateInfo(transform.position, transform.rotation, Camera.main.transform.eulerAngles.y, verticalMovementInput, horizontalMovementInput, running, jump));
                 LogMovement();
             }
 
@@ -123,11 +129,19 @@ namespace OpenMMO
             verticalMovementInput = Mathf.Clamp(moveState.verticalMovementInput, -1, 1);        // good enough for keyboard + controller
             horizontalMovementInput = Mathf.Clamp(moveState.horizontalMovementInput, -1, 1);    // good enough for keyboard + controller
             running = moveState.movementRunning;
+            jump = moveState.movementJump;
 
             cameraYRotation = moveState.cameraYRotation;
 
             UpdateVelocity();
-            RpcCorrectClientPosition(transform.position, transform.rotation, agent.velocity);
+
+            if (agent && agent.isActiveAndEnabled) {
+
+                RpcCorrectClientPosition(transform.position, transform.rotation, agent.velocity);
+            } else {
+
+                RpcCorrectClientPosition(transform.position, transform.rotation, playerRigidbody.velocity);
+            }
         }
 
         // -------------------------------------------------------------------------------
@@ -141,7 +155,7 @@ namespace OpenMMO
         {
             if (isLocalPlayer) return; //IGNORE LOCAL CLIENTS //TODO: Are we positive that local player does not need correction?
 
-            if (agent) {
+            if (agent && agent.isActiveAndEnabled) {
 
                 agent.ResetPath();
                 agent.velocity = _velocity;
@@ -156,6 +170,18 @@ namespace OpenMMO
 
         // -------------------------------------------------------------------------------
 
+
+        private void OnCollisionEnter(Collision other) {
+            if (other.gameObject.tag == "Ground") {
+                isGrounded = true;
+            }
+        }
+
+        private void OnCollisionExit(Collision other) {
+            if (other.gameObject.tag == "Ground") {
+                isGrounded = false;
+            }
+        }
     }
 
 }

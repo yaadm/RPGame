@@ -27,6 +27,9 @@ namespace OpenMMO
 
         //RUN
         protected bool running;
+        protected bool jump;
+
+        protected bool isGrounded;
 
 #if UNITY_EDITOR
         // LOAD DEFAULTS
@@ -87,6 +90,8 @@ namespace OpenMMO
 
             //RUN
             running = Input.GetKey(movementConfig.runKey);
+
+            jump = Input.GetKey(movementConfig.jumpKey);
 
             UpdateVelocity(); //UPDATE VELOCITY
 

@@ -24,7 +24,11 @@ namespace OpenMMO {
     	{
     		get
     		{
-				return (playerRigidbody.velocity != Vector3.zero || (agent && agent.velocity != Vector3.zero));
+				if (agent && agent.isActiveAndEnabled) {
+					return agent.velocity != Vector3.zero;
+				} else {
+					return playerRigidbody.velocity != Vector3.zero;
+				}
     		}
 		}
 		
