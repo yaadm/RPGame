@@ -31,7 +31,7 @@ namespace OpenMMO
         protected virtual void UpdateVelocity()
         {
             
-            Vector3 newVelocity = Vector3.zero;
+            
 
             if (verticalMovementInput != 0 || horizontalMovementInput != 0)
             {
@@ -49,14 +49,12 @@ namespace OpenMMO
 
                 // calc movement speed factor
                 float factor = running ? movementConfig.runSpeedScale : movementConfig.walkSpeedScale;
-                newVelocity = direction * agent.speed * factor * movementConfig.moveSpeedMultiplier;
+                Vector3 newVelocity = direction * agent.speed * factor * movementConfig.moveSpeedMultiplier;
                 
                 transform.LookAt(transform.position + direction, Vector3.up);
-                
-                newVelocity.y = playerRigidbody.velocity.y;
 
                 if (agent && agent.isActiveAndEnabled) {
-                    agent.velocity = newVelocity;
+                    agent.Move(newVelocity);
                 } else {
 
                     playerRigidbody.velocity = newVelocity;
@@ -69,10 +67,13 @@ namespace OpenMMO
                 jump = false;
 
                 if (agent && agent.isActiveAndEnabled) {
+
+                    // NavMeshAgent cant Jump ! - as far as we know :) 
+                    // maybe try YOffset ?
                     agent.velocity += Vector3.up * agent.speed * movementConfig.jumpSpeedScale * movementConfig.jumpSpeedMultiplier;
                 } else {
 
-                    playerRigidbody.AddForce(0,agent.speed * movementConfig.jumpSpeedScale * movementConfig.jumpSpeedMultiplier,0, ForceMode.Impulse);
+                    playerRigidbody.AddForce(0, agent.speed * movementConfig.jumpSpeedScale * movementConfig.jumpSpeedMultiplier, 0, ForceMode.Impulse);
                 }
             }
 
@@ -158,14 +159,37 @@ namespace OpenMMO
             if (agent && agent.isActiveAndEnabled) {
 
                 agent.ResetPath();
-                agent.velocity = _velocity;
+
+                // if we will need this feature, try using velocity only and remove position.
+                // update position only if client _position.DistanceTo(transform.position) > Delta (allowed 
+                
+                // disable the velocity, its updated VIA movePosition. ? could 
+                //_velocity.y = 0;
+                //agent.velocity = _velocity;
+                
+                //transform.position = _position;
+                agent.Move(_velocity);
+                transform.rotation = _rotation;
+
+                // TODO: check if Server Player Position is unsynced to the client position and fix position ?
+                // If we ever need to make the player character AI UserNavMeshAgent
+
             } else {
+
+                // disable the velocity, its updated VIA movePosition.
+                _velocity.y = 0;
                 playerRigidbody.velocity = _velocity;
+
+                if (!_position.Equals(playerRigidbody.position)){
+
+                    playerRigidbody.MovePosition(_position);
+                }
+                if (!_rotation.Equals(playerRigidbody.rotation)){
+
+                    playerRigidbody.rotation = _rotation;
+                }
+
             }
-
-            transform.position = _position;
-            transform.rotation = _rotation;
-
         }
 
         // -------------------------------------------------------------------------------
