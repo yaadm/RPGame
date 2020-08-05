@@ -51,7 +51,11 @@ namespace OpenMMO
                 float factor = running ? movementConfig.runSpeedScale : movementConfig.walkSpeedScale;
                 Vector3 newVelocity = direction * agent.speed * factor * movementConfig.moveSpeedMultiplier;
                 
+                // rotate player at X,Z axis to target
                 transform.LookAt(transform.position + direction, Vector3.up);
+
+                // dont affect current Y axis velocity
+                newVelocity.y = playerRigidbody.velocity.y;
 
                 if (agent && agent.isActiveAndEnabled) {
                     agent.Move(newVelocity);
