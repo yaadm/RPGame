@@ -19,9 +19,10 @@ GameObject:
   - component: {fileID: -272401145901597495}
   - component: {fileID: 9111086623005289746}
   - component: {fileID: -946517360316036162}
+  - component: {fileID: 6463852353472803258}
   m_Layer: 10
   m_Name: Humanoid[BASE]
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -223,10 +224,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  managerUpdateInterval: 1
+  managerUpdateInterval: 0
   cacheUpdateInterval: 1
   currentTarget: {fileID: 0}
   movementConfig: {fileID: 11400000, guid: 42c68c1577850d24e8c89bf1d146e357, type: 2}
+--- !u!135 &6463852353472803258
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7930793167279634983}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 10
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!1001 &3887906202014870064
 PrefabInstance:
   m_ObjectHideFlags: 0

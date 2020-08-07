@@ -21,14 +21,12 @@ namespace OpenMMO
         [SyncVar]
         public Transform currentTarget;
 
-        private List<Transform> nearbyPlayers;
+        private List<Transform> nearbyPlayers = new List<Transform>();
 
         private bool switchTarget = false;
 
         [Header("Player Control Config")]
         public PlayerControlConfig movementConfig;
-
-        protected PlayerTargetingComponent targetingComponent;
 
 #if UNITY_EDITOR
         // LOAD DEFAULTS
@@ -81,6 +79,7 @@ namespace OpenMMO
         protected override void UpdateClient()
         {
 
+
             if (!isLocalPlayer) return;
             if (Tools.AnyInputFocused) return;
 
@@ -107,10 +106,8 @@ namespace OpenMMO
 
         public virtual void onTargetButtonClicked()
         {
-            // TODO: Aquire Target
-
             // If no nearby players.
-            if (nearbyPlayers.Count >= 0)
+            if (nearbyPlayers.Count <= 0)
             {
 
                 currentTarget = null;
@@ -141,6 +138,10 @@ namespace OpenMMO
 
                     currentTarget = nearbyPlayers[index];
                 }
+            }
+            else
+            {
+                currentTarget = nearbyPlayers[0];
             }
         }
 

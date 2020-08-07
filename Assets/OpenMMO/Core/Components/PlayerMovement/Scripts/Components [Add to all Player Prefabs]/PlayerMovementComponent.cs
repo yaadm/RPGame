@@ -29,8 +29,6 @@ namespace OpenMMO
         protected bool running = true;
         protected bool jump;
 
-        protected bool isGrounded;
-
 #if UNITY_EDITOR
         // LOAD DEFAULTS
         private void OnValidate()

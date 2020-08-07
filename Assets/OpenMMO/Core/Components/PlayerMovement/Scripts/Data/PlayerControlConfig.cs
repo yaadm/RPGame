@@ -41,7 +41,7 @@ namespace OpenMMO
         public InputAxis moveAxisVertical = InputAxis.Vertical;
         public KeyCode jumpKey = KeyCode.Space;
 
-        public KeyCode targetKey = KeyCode.Tab;
+        public KeyCode targetKey = KeyCode.Q;
 
         [Header("Move Speed")]
         [Tooltip("How fast you can move.")]
@@ -60,6 +60,6 @@ namespace OpenMMO
         //JUMP
         [Tooltip("Scales speed while running. 1.0f = normal speed")]
         [Range(0, 10)] public float jumpSpeedScale = 2f;
-        
+
     }
 }

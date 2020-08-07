@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a06ca1889a75bf45986f4cad94c281c, type: 3}
   m_Name: DefaultPlayerControls
   m_EditorClassIdentifier: 
-  runKey: 304
+  runKey: 267
   moveAxisHorizontal: 0
   moveAxisVertical: 1
   jumpKey: 32
-  targetKey: 9
+  targetKey: 113
   moveSpeedMultiplier: 3
   jumpSpeedMultiplier: 4
   walkSpeedScale: 1.5
