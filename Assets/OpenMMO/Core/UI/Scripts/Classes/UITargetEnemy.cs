@@ -24,51 +24,71 @@ namespace OpenMMO.UI
 
         protected PlayerTargetingComponent targetingComponent;
 
-		
+
 #if UNITY_EDITOR
-// LOAD DEFAULTS
+        // LOAD DEFAULTS
         private void OnValidate()
         {
-            if (!targetButton) {
-                Debug.LogError("No Target Button !");
-            }
 
-            if (!targetPannel) {
-                Debug.LogError("No Target Pannel !");
-            }
-
-            if (!targetName) {
-                Debug.LogError("No targetName Pannel !");
-            }
-
-            if (!healthBar) {
-                Debug.LogError("No healthBar Pannel !");
-            }
-
-            if (!manaBar) {
-                Debug.LogError("No manaBar Pannel !");
-            }
         }
 #endif
 
-		// -------------------------------------------------------------------------------
+        // -------------------------------------------------------------------------------
         // OnEnable
         // -------------------------------------------------------------------------------
-        void OnEnable() 
+        void OnEnable()
         {
-            if(!targetPannel) {
-                Debug.LogError("Targeting Component: no UI Target Pannel !");
+
+            if (!targetName)
+            {
+                Debug.LogError("No targetName Pannel !");
                 return;
             }
 
+            if (!healthBar)
+            {
+                Debug.LogError("No healthBar Pannel !");
+                return;
+            }
+
+            if (!manaBar)
+            {
+                Debug.LogError("No manaBar Pannel !");
+                return;
+            }
+
+            if (!targetPannel)
+            {
+                Debug.LogError("Targeting Component: no UI Target Pannel !");
+                return;
+            }
             targetPannel.SetActive(false);
+
+            if (!targetButton)
+            {
+                Debug.LogError("No Target Button !");
+                return;
+            }
             targetButton.onClick.SetListener(() =>
             {
-                if (targetPannel) {
-                    
-                    targetingComponent.onTargetButtonClicked();
-                    
-                } else {
+                if (targetPannel)
+                {
+
+                    if (targetingComponent)
+                    {
+
+                        targetingComponent.onTargetButtonClicked();
+                    }
+                    else
+                    {
+
+                        Debug.LogError("No targetingComponent !");
+                    }
+
+
+                }
+                else
+                {
 
                     Debug.LogError("OnClick() - faild no goPanel");
                 }
@@ -76,27 +96,35 @@ namespace OpenMMO.UI
 
         }
 
-        void LateUpdate() {
-            
-            if (!targetingComponent) {
+        void LateUpdate()
+        {
 
-                if (!PlayerComponent.localPlayer) {
+            if (!targetingComponent)
+            {
+
+                if (!PlayerComponent.localPlayer)
+                {
+                    Debug.LogWarning("no local player yet...");
                     return;
                 }
-                
+
                 targetingComponent = PlayerComponent.localPlayer.GetComponent<PlayerTargetingComponent>();
 
-                if (!targetingComponent) {
+                if (!targetingComponent)
+                {
                     return;
                 }
             }
 
-            if (targetingComponent.targetPlayer) {
+            if (targetingComponent.currentTarget)
+            {
 
                 // TODO: update UI components to match the targeted player
 
                 targetPannel.SetActive(true);
-            } else {
+            }
+            else
+            {
                 targetPannel.SetActive(false);
             }
         }

@@ -89,7 +89,8 @@ namespace OpenMMO
             verticalMovementInput = Input.GetAxis(movementConfig.moveAxisVertical.ToString());
 
             //RUN - Toggle
-            if (Input.GetKeyDown(movementConfig.runKey)) {
+            if (Input.GetKeyDown(movementConfig.runKey))
+            {
                 running = !running;
             }
             //running = Input.GetKeyDown(movementConfig.runKey);

@@ -30,14 +30,14 @@ namespace OpenMMO
         // -------------------------------------------------------------------------------
         protected virtual void UpdateVelocity()
         {
-            
+
             if (verticalMovementInput != 0 || horizontalMovementInput != 0)
             {
 
                 // make input vector without Y axis
                 Vector3 input = new Vector3(horizontalMovementInput, 0, verticalMovementInput);
                 if (input.magnitude > 1) input = input.normalized;
-                
+
                 // calc camera rotation to move relative to
                 Vector3 angles = new Vector3(0, IsLocalPlayer ? Camera.main.transform.eulerAngles.y : cameraYRotation, 0);
                 Quaternion rotation = Quaternion.Euler(angles);
@@ -48,31 +48,38 @@ namespace OpenMMO
                 // calc movement speed factor
                 float factor = running ? movementConfig.runSpeedScale : movementConfig.walkSpeedScale;
                 Vector3 newVelocity = direction * agent.speed * factor * movementConfig.moveSpeedMultiplier;
-                
+
                 // rotate player at X,Z axis to target
                 transform.LookAt(transform.position + direction, Vector3.up);
 
-                if (agent && agent.isActiveAndEnabled) {
+                if (agent && agent.isActiveAndEnabled)
+                {
                     agent.Move(newVelocity);
-                } else {
+                }
+                else
+                {
 
                     // dont affect current Y axis velocity
                     newVelocity.y = playerRigidbody.velocity.y;
                     playerRigidbody.velocity = newVelocity;
                 }
             }
-            
-            
 
-            if (jump && isGrounded) {
+
+
+            if (jump && isPlayerGrounded)
+            {
                 jump = false;
 
-                if (agent && agent.isActiveAndEnabled) {
+                if (agent && agent.isActiveAndEnabled)
+                {
 
                     // NavMeshAgent cant Jump ! - as far as we know :) 
                     // maybe try YOffset ?
                     agent.velocity += Vector3.up * agent.speed * movementConfig.jumpSpeedScale * movementConfig.jumpSpeedMultiplier;
-                } else {
+                }
+                else
+                {
 
                     playerRigidbody.AddForce(0, agent.speed * movementConfig.jumpSpeedScale * movementConfig.jumpSpeedMultiplier, 0, ForceMode.Impulse);
                 }
@@ -137,10 +144,13 @@ namespace OpenMMO
 
             UpdateVelocity();
 
-            if (agent && agent.isActiveAndEnabled) {
+            if (agent && agent.isActiveAndEnabled)
+            {
 
                 RpcCorrectClientPosition(transform.position, transform.rotation, agent.velocity);
-            } else {
+            }
+            else
+            {
 
                 RpcCorrectClientPosition(transform.position, transform.rotation, playerRigidbody.velocity);
             }
@@ -157,17 +167,18 @@ namespace OpenMMO
         {
             if (isLocalPlayer) return; //IGNORE LOCAL CLIENTS //TODO: Are we positive that local player does not need correction?
 
-            if (agent && agent.isActiveAndEnabled) {
+            if (agent && agent.isActiveAndEnabled)
+            {
 
                 agent.ResetPath();
 
                 // if we will need this feature, try using velocity only and remove position.
                 // update position only if client _position.DistanceTo(transform.position) > Delta (allowed 
-                
+
                 // disable the velocity, its updated VIA movePosition. ? could 
                 //_velocity.y = 0;
                 //agent.velocity = _velocity;
-                
+
                 //transform.position = _position;
                 agent.Move(_velocity);
                 transform.rotation = _rotation;
@@ -175,17 +186,21 @@ namespace OpenMMO
                 // TODO: check if Server Player Position is unsynced to the client position and fix position ?
                 // If we ever need to make the player character AI UserNavMeshAgent
 
-            } else {
+            }
+            else
+            {
 
                 // disable the velocity, its updated VIA movePosition.
                 _velocity.y = 0;
                 playerRigidbody.velocity = _velocity;
 
-                if (!_position.Equals(playerRigidbody.position)){
+                if (!_position.Equals(playerRigidbody.position))
+                {
 
                     playerRigidbody.MovePosition(_position);
                 }
-                if (!_rotation.Equals(playerRigidbody.rotation)){
+                if (!_rotation.Equals(playerRigidbody.rotation))
+                {
 
                     playerRigidbody.rotation = _rotation;
                 }
@@ -195,16 +210,19 @@ namespace OpenMMO
 
         // -------------------------------------------------------------------------------
 
-
-        private void OnCollisionEnter(Collision other) {
-            if (other.gameObject.tag == "Ground") {
-                isGrounded = true;
+        private void OnCollisionEnter(Collision other)
+        {
+            if (other.gameObject.tag == "Ground")
+            {
+                isPlayerGrounded = true;
             }
         }
 
-        private void OnCollisionExit(Collision other) {
-            if (other.gameObject.tag == "Ground") {
-                isGrounded = false;
+        private void OnCollisionExit(Collision other)
+        {
+            if (other.gameObject.tag == "Ground")
+            {
+                isPlayerGrounded = false;
             }
         }
     }

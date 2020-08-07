@@ -5,6 +5,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using Mirror;
 //using OpenMMO;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace OpenMMO
 {
@@ -17,12 +19,16 @@ namespace OpenMMO
         [Header("Target Settings")]
         [HideInInspector]
         [SyncVar]
-        public GameObject targetPlayer;
+        public Transform currentTarget;
+
+        private List<Transform> nearbyPlayers;
 
         private bool switchTarget = false;
 
         [Header("Player Control Config")]
         public PlayerControlConfig movementConfig;
+
+        protected PlayerTargetingComponent targetingComponent;
 
 #if UNITY_EDITOR
         // LOAD DEFAULTS
@@ -46,7 +52,7 @@ namespace OpenMMO
         // -------------------------------------------------------------------------------
         public override void OnStartLocalPlayer()
         {
-            
+
         }
 
         // -------------------------------------------------------------------------------
@@ -78,7 +84,8 @@ namespace OpenMMO
             if (!isLocalPlayer) return;
             if (Tools.AnyInputFocused) return;
 
-            if(Input.GetKeyDown(movementConfig.targetKey)) {
+            if (Input.GetKeyDown(movementConfig.targetKey))
+            {
                 onTargetButtonClicked();
             }
 
@@ -87,9 +94,54 @@ namespace OpenMMO
 
         }
 
-        public virtual GameObject onTargetButtonClicked() {
+        public virtual void setTarget(Transform target)
+        {
+            currentTarget = target;
+        }
+
+        public virtual Transform getTarget()
+        {
+            // TODO: check if target is dead ? (or it wil be handled in another place ?)
+            return currentTarget;
+        }
+
+        public virtual void onTargetButtonClicked()
+        {
             // TODO: Aquire Target
-            return null;
+
+            // If no nearby players.
+            if (nearbyPlayers.Count >= 0)
+            {
+
+                currentTarget = null;
+                return;
+            }
+
+            if (currentTarget)
+            {
+                int index = nearbyPlayers.IndexOf(currentTarget);
+
+                // current target doest not exists in nearbyPlayers
+                if (index > nearbyPlayers.Count - 1 || index < 0)
+                {
+                    // current target is not available \ out of range
+
+                    // get closest enemy
+                    currentTarget = nearbyPlayers[0];
+                }
+                else
+                {
+
+                    // if next index is out of bounds, start again from index 0;
+                    index++;
+                    if (index > nearbyPlayers.Count - 1)
+                    {
+                        index = 0;
+                    }
+
+                    currentTarget = nearbyPlayers[index];
+                }
+            }
         }
 
         // -------------------------------------------------------------------------------
@@ -104,7 +156,50 @@ namespace OpenMMO
 
         // -------------------------------------------------------------------------------
 
+
+        void OnTriggerEnter(Collider other)
+        {
+            if (other.tag == "Player")
+            {
+                //TODO: check if enemy
+
+                if (!nearbyPlayers.Contains(other.transform))
+                {
+                    // add enemy to nearby list.
+                    nearbyPlayers.Add(other.transform);
+                }
+            }
+        }
+
+        void OnTriggerExit(Collider other)
+        {
+            if (other.tag == "Player")
+            {
+                //TODO: check if enemy ? i dont think we need to check that... maybe...
+
+                if (nearbyPlayers.Contains(other.transform))
+                {
+                    // remove enemy from nearby list.
+                    nearbyPlayers.Remove(other.transform);
+                }
+            }
+        }
+
+        void Sort()
+        {
+            //TODO: should only occure once you enter combat !
+            nearbyPlayers.Sort(delegate (Transform a, Transform b)
+            {
+                return Vector3.Distance(transform.position, a.transform.position).CompareTo(Vector3.Distance(transform.position, b.transform.position));
+            });
+        }
+
+        public Transform haveTarget()
+        {
+            return currentTarget;
+        }
+
     }
 
-    
+
 }
