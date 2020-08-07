@@ -7,9 +7,8 @@ namespace OpenMMO.UI
 {
 
     // ===================================================================================
-    // UIShortcut
+    // UITargetEnemy
     // ===================================================================================
-    [RequireComponent(typeof(Button))]
     public class UITargetEnemy : MonoBehaviour
     {
         [Header("Target Settings")]
@@ -17,7 +16,8 @@ namespace OpenMMO.UI
 
         public GameObject targetPannel;
 
-        public GameObject targetName;
+        public Text targetName;
+
         public GameObject healthBar;
 
         public GameObject manaBar;
@@ -120,6 +120,10 @@ namespace OpenMMO.UI
             {
 
                 // TODO: update UI components to match the targeted player
+
+                PlayerComponent pc = targetingComponent.currentTarget.GetComponent<PlayerComponent>();
+
+                targetName.text = pc.name;
 
                 targetPannel.SetActive(true);
             }
