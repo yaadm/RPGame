@@ -2,34 +2,27 @@
 //using System.Text;
 //using System.Collections.Generic;
 using UnityEngine;
-//using UnityEngine.AI;
+using UnityEngine.UI;
 using Mirror;
 //using OpenMMO;
 
 namespace OpenMMO
 {
+
     // ===================================================================================
-    // PlayerMovement
+    // Targeting System
     // ===================================================================================
-    [DisallowMultipleComponent]
-    [System.Serializable]
-    public partial class PlayerMovementComponent : EntityMovementComponent
+    public partial class PlayerTargetingComponent : EntityTargetingComponent
     {
-        [Header("Player Movement Config")]
+        [Header("Target Settings")]
+        [HideInInspector]
+        [SyncVar]
+        public GameObject targetPlayer;
+
+        private bool switchTarget = false;
+
+        [Header("Player Control Config")]
         public PlayerControlConfig movementConfig;
-
-        //MOVE
-        protected float verticalMovementInput;
-        protected float horizontalMovementInput;
-
-        //TURN
-        protected float cameraYRotation;
-
-        //RUN
-        protected bool running = true;
-        protected bool jump;
-
-        protected bool isGrounded;
 
 #if UNITY_EDITOR
         // LOAD DEFAULTS
@@ -39,12 +32,12 @@ namespace OpenMMO
         }
 #endif
 
+
         // -------------------------------------------------------------------------------
         // Start
         // -------------------------------------------------------------------------------
         protected override void Start()
         {
-            agent.updateRotation = false;
             base.Start();
         }
 
@@ -53,6 +46,7 @@ namespace OpenMMO
         // -------------------------------------------------------------------------------
         public override void OnStartLocalPlayer()
         {
+            
         }
 
         // -------------------------------------------------------------------------------
@@ -84,23 +78,18 @@ namespace OpenMMO
             if (!isLocalPlayer) return;
             if (Tools.AnyInputFocused) return;
 
-            //MOVE
-            horizontalMovementInput = Input.GetAxis(movementConfig.moveAxisHorizontal.ToString());
-            verticalMovementInput = Input.GetAxis(movementConfig.moveAxisVertical.ToString());
-
-            //RUN - Toggle
-            if (Input.GetKeyDown(movementConfig.runKey)) {
-                running = !running;
+            if(Input.GetKeyDown(movementConfig.targetKey)) {
+                onTargetButtonClicked();
             }
-            //running = Input.GetKeyDown(movementConfig.runKey);
-
-            jump = Input.GetKeyDown(movementConfig.jumpKey);
-
-            UpdateVelocity(); //UPDATE VELOCITY
 
             base.UpdateClient();
             this.InvokeInstanceDevExtMethods(nameof(UpdateClient)); //HOOK
 
+        }
+
+        public virtual GameObject onTargetButtonClicked() {
+            // TODO: Aquire Target
+            return null;
         }
 
         // -------------------------------------------------------------------------------
@@ -117,6 +106,5 @@ namespace OpenMMO
 
     }
 
+    
 }
-
-// =======================================================================================

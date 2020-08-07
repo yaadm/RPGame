@@ -31,8 +31,6 @@ namespace OpenMMO
         protected virtual void UpdateVelocity()
         {
             
-            
-
             if (verticalMovementInput != 0 || horizontalMovementInput != 0)
             {
 
@@ -54,13 +52,12 @@ namespace OpenMMO
                 // rotate player at X,Z axis to target
                 transform.LookAt(transform.position + direction, Vector3.up);
 
-                // dont affect current Y axis velocity
-                newVelocity.y = playerRigidbody.velocity.y;
-
                 if (agent && agent.isActiveAndEnabled) {
                     agent.Move(newVelocity);
                 } else {
 
+                    // dont affect current Y axis velocity
+                    newVelocity.y = playerRigidbody.velocity.y;
                     playerRigidbody.velocity = newVelocity;
                 }
             }

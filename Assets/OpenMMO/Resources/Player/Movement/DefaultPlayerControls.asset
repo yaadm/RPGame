@@ -16,8 +16,9 @@ MonoBehaviour:
   moveAxisHorizontal: 0
   moveAxisVertical: 1
   jumpKey: 32
+  targetKey: 9
   moveSpeedMultiplier: 3
-  jumpSpeedMultiplier: 1
+  jumpSpeedMultiplier: 4
   walkSpeedScale: 1.5
   runSpeedScale: 3
-  jumpSpeedScale: 1.5
+  jumpSpeedScale: 3

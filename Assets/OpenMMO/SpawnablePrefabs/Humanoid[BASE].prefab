@@ -18,6 +18,7 @@ GameObject:
   - component: {fileID: 4769897492077146287}
   - component: {fileID: -272401145901597495}
   - component: {fileID: 9111086623005289746}
+  - component: {fileID: -946517360316036162}
   m_Layer: 10
   m_Name: Humanoid[BASE]
   m_TagString: Untagged
@@ -74,7 +75,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 80
+  m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!195 &8539800676653855757
 NavMeshAgent:
@@ -208,6 +209,24 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0.6, z: 0}
+--- !u!114 &-946517360316036162
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7930793167279634983}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be050d9dd6e1bb94c961a56d099ae831, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  managerUpdateInterval: 1
+  cacheUpdateInterval: 1
+  targetPlayer: {fileID: 0}
+  movementConfig: {fileID: 11400000, guid: 42c68c1577850d24e8c89bf1d146e357, type: 2}
 --- !u!1001 &3887906202014870064
 PrefabInstance:
   m_ObjectHideFlags: 0

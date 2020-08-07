@@ -34,12 +34,14 @@ namespace OpenMMO
     {
 
         [Header("Input Keys")]
-        public KeyCode runKey = KeyCode.LeftShift;
+        public KeyCode runKey = KeyCode.Slash;
 
         //MOVE
         public InputAxis moveAxisHorizontal = InputAxis.Horizontal;
         public InputAxis moveAxisVertical = InputAxis.Vertical;
         public KeyCode jumpKey = KeyCode.Space;
+
+        public KeyCode targetKey = KeyCode.Tab;
 
         [Header("Move Speed")]
         [Tooltip("How fast you can move.")]
