@@ -13,7 +13,7 @@ namespace OpenMMO
     // ===================================================================================
     // PlayerMovement
     // ===================================================================================
-    public partial class PlayerMovementComponent
+    public partial class PlayerControllerComponent
     {
 
         [Header("Performance")]
@@ -22,6 +22,17 @@ namespace OpenMMO
         public double movementUpdateInterval = 1f;
 
         double _timerMovement = 0;
+
+        //MOVE
+        protected float verticalMovementInput;
+        protected float horizontalMovementInput;
+
+        //TURN
+        protected float cameraYRotation;
+
+        //RUN
+        protected bool running;
+        protected bool jump;
 
         // -------------------------------------------------------------------------------
         // UpdateVelocity

@@ -14,7 +14,7 @@ namespace OpenMMO
     // ===================================================================================
     // EntityMovementComponent
     // ===================================================================================
-    public partial class EntityMovementComponent
+    public partial class EntityControllerComponent
     {
 
         // -------------------------------------------------------------------------------

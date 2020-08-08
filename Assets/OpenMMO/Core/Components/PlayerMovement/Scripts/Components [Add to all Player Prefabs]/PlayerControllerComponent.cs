@@ -5,6 +5,7 @@ using UnityEngine;
 //using UnityEngine.AI;
 using Mirror;
 //using OpenMMO;
+using UnityEngine.EventSystems;
 
 namespace OpenMMO
 {
@@ -13,21 +14,12 @@ namespace OpenMMO
     // ===================================================================================
     [DisallowMultipleComponent]
     [System.Serializable]
-    public partial class PlayerMovementComponent : EntityMovementComponent
+    public partial class PlayerControllerComponent : EntityControllerComponent
     {
         [Header("Player Movement Config")]
         public PlayerControlConfig movementConfig;
 
-        //MOVE
-        protected float verticalMovementInput;
-        protected float horizontalMovementInput;
 
-        //TURN
-        protected float cameraYRotation;
-
-        //RUN
-        protected bool running = true;
-        protected bool jump;
 
 #if UNITY_EDITOR
         // LOAD DEFAULTS
@@ -82,6 +74,10 @@ namespace OpenMMO
             if (!isLocalPlayer) return;
             if (Tools.AnyInputFocused) return;
 
+            // ***********************************
+            // Movement SYSTEM
+            // ***********************************
+
             //MOVE
             horizontalMovementInput = Input.GetAxis(movementConfig.moveAxisHorizontal.ToString());
             verticalMovementInput = Input.GetAxis(movementConfig.moveAxisVertical.ToString());
@@ -97,9 +93,63 @@ namespace OpenMMO
 
             UpdateVelocity(); //UPDATE VELOCITY
 
+            // ***********************************
+            // Targeting SYSTEM
+            // ***********************************
+
+            if (Input.GetKeyDown(movementConfig.targetKey))
+            {
+                onTargetButtonClicked();
+            }
+
+            if (Input.GetMouseButtonDown(0))
+            {
+                mouseDownPos = Input.mousePosition;
+            }
+
+            if (Input.GetMouseButtonUp(0))
+            {
+
+                if (Vector3.Distance(Input.mousePosition, mouseDownPos) < minClickDistance)
+                {
+                    // it was a click !
+
+                    // if clicked on UI, return
+                    if (EventSystem.current.IsPointerOverGameObject())
+                    {
+                        return;
+                    }
+
+                    RaycastHit hit;
+                    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+                    // gets only the first collider it founds ! not all in path.
+                    if (Physics.Raycast(ray, out hit))
+                    {
+                        if (hit.transform.tag == "Player")
+                        {
+                            currentTarget = hit.transform;
+                        }
+                        else
+                        {
+                            // Clicked on Game, but no "Player" objects found.
+                            currentTarget = null;
+                        }
+                    }
+                    else
+                    {
+                        // Clicked on Game, but no objects found.
+                        currentTarget = null;
+                    }
+                }
+                else
+                {
+                    // it was a drag
+                }
+            }
+
             base.UpdateClient();
             this.InvokeInstanceDevExtMethods(nameof(UpdateClient)); //HOOK
-
         }
 
         // -------------------------------------------------------------------------------

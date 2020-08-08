@@ -22,7 +22,7 @@ namespace OpenMMO.UI
 
         public GameObject manaBar;
 
-        protected PlayerTargetingComponent targetingComponent;
+        protected PlayerControllerComponent targetingComponent;
 
 
 #if UNITY_EDITOR
@@ -99,6 +99,7 @@ namespace OpenMMO.UI
         void LateUpdate()
         {
 
+            // should happen in OnStart ?
             if (!targetingComponent)
             {
 
@@ -108,7 +109,7 @@ namespace OpenMMO.UI
                     return;
                 }
 
-                targetingComponent = PlayerComponent.localPlayer.GetComponent<PlayerTargetingComponent>();
+                targetingComponent = PlayerComponent.localPlayer.GetComponent<PlayerControllerComponent>();
 
                 if (!targetingComponent)
                 {

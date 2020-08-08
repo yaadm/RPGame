@@ -17,7 +17,7 @@ namespace OpenMMO
     [RequireComponent(typeof(NavMeshAgent), typeof(Animator), typeof(EntityComponent))]
     [DisallowMultipleComponent]
     [System.Serializable]
-    public partial class EntityMovementComponent : SyncableComponent
+    public partial class EntityControllerComponent : SyncableComponent
     {
 
         [Header("Components")]
