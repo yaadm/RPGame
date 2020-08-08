@@ -9,20 +9,9 @@ namespace OpenMMO.UI
     // ===================================================================================
     // UITargetEnemy
     // ===================================================================================
-    public class UITargetEnemy : MonoBehaviour
+    public partial class UICharacterManager : UIManager
     {
-        [Header("Target Settings")]
-        public Button targetButton;
 
-        public GameObject targetPannel;
-
-        public Text targetName;
-
-        public GameObject healthBar;
-
-        public GameObject manaBar;
-
-        protected PlayerControllerComponent targetingComponent;
 
 
 #if UNITY_EDITOR
@@ -99,44 +88,9 @@ namespace OpenMMO.UI
         void LateUpdate()
         {
 
-            // should happen in OnStart ?
-            if (!targetingComponent)
-            {
+            onTargetLateUpdate();
 
-                if (!PlayerComponent.localPlayer)
-                {
-                    Debug.LogWarning("no local player yet...");
-                    return;
-                }
-
-                targetingComponent = PlayerComponent.localPlayer.GetComponent<PlayerControllerComponent>();
-
-                if (!targetingComponent)
-                {
-                    Debug.LogError("no targetingComponent !");
-                    return;
-                }
-            }
-
-            if (targetingComponent.currentTarget)
-            {
-
-                // TODO: update UI components to match the targeted player
-
-                PlayerComponent pc = targetingComponent.currentTarget.GetComponent<PlayerComponent>();
-
-                if (pc)
-                {
-
-                    targetName.text = pc.name;
-
-                    targetPannel.SetActive(true);
-                }
-            }
-            else
-            {
-                targetPannel.SetActive(false);
-            }
+            onPortraitLateUpdate();
         }
 
     }

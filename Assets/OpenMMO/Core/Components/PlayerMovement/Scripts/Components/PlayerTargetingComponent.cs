@@ -33,6 +33,7 @@ namespace OpenMMO
 
         public virtual void setTarget(Transform target)
         {
+            //TODO: add change target sound
             currentTarget = target;
         }
 
@@ -47,8 +48,7 @@ namespace OpenMMO
             // If no nearby players.
             if (nearbyPlayers.Count <= 0)
             {
-
-                currentTarget = null;
+                setTarget(null);
                 return;
             }
 
@@ -62,24 +62,33 @@ namespace OpenMMO
                     // current target is not available \ out of range
 
                     // get closest enemy
-                    currentTarget = nearbyPlayers[0];
+                    setTarget(nearbyPlayers[0]);
                 }
                 else
                 {
 
-                    // if next index is out of bounds, start again from index 0;
+                    // target next enemy
                     index++;
+
+                    // if next index is out of bounds, start again from index 0;
                     if (index > nearbyPlayers.Count - 1)
                     {
                         index = 0;
                     }
 
-                    currentTarget = nearbyPlayers[index];
+                    // if after target rotation we reached the same target, dont set new target.
+                    // could happen if there is only one enemy in range, and we try to get new target. (we dont want the target sound to play again)
+                    if (nearbyPlayers[index] != currentTarget)
+                    {
+
+                        setTarget(nearbyPlayers[index]);
+                    }
                 }
             }
             else
             {
-                currentTarget = nearbyPlayers[0];
+                // dont have a target yet, target first available.
+                setTarget(nearbyPlayers[0]);
             }
         }
 
