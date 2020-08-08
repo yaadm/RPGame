@@ -112,6 +112,7 @@ namespace OpenMMO.UI
 
                 if (!targetingComponent)
                 {
+                    Debug.LogError("no targetingComponent !");
                     return;
                 }
             }
@@ -123,9 +124,13 @@ namespace OpenMMO.UI
 
                 PlayerComponent pc = targetingComponent.currentTarget.GetComponent<PlayerComponent>();
 
-                targetName.text = pc.name;
+                if (pc)
+                {
 
-                targetPannel.SetActive(true);
+                    targetName.text = pc.name;
+
+                    targetPannel.SetActive(true);
+                }
             }
             else
             {

@@ -7,6 +7,7 @@ using Mirror;
 //using OpenMMO;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.EventSystems;
 
 namespace OpenMMO
 {
@@ -27,6 +28,10 @@ namespace OpenMMO
 
         [Header("Player Control Config")]
         public PlayerControlConfig movementConfig;
+
+        private Vector3 mouseDownPos;
+
+        public float minClickDistance;
 
 #if UNITY_EDITOR
         // LOAD DEFAULTS
@@ -87,6 +92,51 @@ namespace OpenMMO
             {
                 onTargetButtonClicked();
             }
+
+            if (Input.GetMouseButtonDown(0))
+            {
+                mouseDownPos = Input.mousePosition;
+
+            }
+
+            if (Input.GetMouseButtonUp(0))
+            {
+
+                if (Vector3.Distance(Input.mousePosition, mouseDownPos) < minClickDistance)
+                {
+                    // it was a click !
+
+                    // if not clicked on UI
+                    if (!EventSystem.current.IsPointerOverGameObject())
+                    {
+                        RaycastHit hit;
+                        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                        if (Physics.Raycast(ray, out hit))
+                        {
+                            if (hit.transform.tag == "Player")
+                            {
+
+                                currentTarget = hit.transform;
+                            }
+                            else
+                            {
+                                currentTarget = null;
+                            }
+                        }
+                        else
+                        {
+                            currentTarget = null;
+                        }
+                    }
+
+                }
+                else
+                {
+                    // it was a drag
+                }
+            }
+
+
 
             base.UpdateClient();
             this.InvokeInstanceDevExtMethods(nameof(UpdateClient)); //HOOK

@@ -15,82 +15,83 @@ using OpenMMO.Zones;
 namespace OpenMMO.Zones
 {
 
-	// ===================================================================================
-	// ZonePortal
-	// ===================================================================================
-	[DisallowMultipleComponent]
-	public class ZonePortal : BasePortal
-	{
-	
-		[Header("Teleportation")]
-		[Tooltip("Target Network Zone to teleport to (optional)")]
-		public NetworkZoneTemplate targetZone;
-		[Tooltip("Anchor name in the target scene to teleport to")]
-		public string targetAnchor;
-		
-		
-		public string popupZoning 	= "Zoning, please wait...";
-		
-		// -------------------------------------------------------------------------------
-		// OnTriggerEnter
-		// @Client / @Server
-		// -------------------------------------------------------------------------------
-		public override void OnTriggerEnter(Collider co)
-		{
+    // ===================================================================================
+    // ZonePortal
+    // ===================================================================================
+    [DisallowMultipleComponent]
+    public class ZonePortal : BasePortal
+    {
 
-			PlayerComponent pc = co.GetComponentInParent<PlayerComponent>();
-			
-			if (pc == null || !pc.IsLocalPlayer)
-				return;
-			
-			// -- can we switch zones?
-			if (!ZoneManager.singleton.GetCanSwitchZone)
-			{
-				UIPopupNotify.singleton.Init(popupClosed);
-				return;
-			}
-			
-			if (!triggerOnEnter)
-			{
-			
-				if (pc.CheckCooldown)
-					UIPopupPrompt.singleton.Init(String.Format(popupEnter, targetZone.title), OnClickConfirm);
-				else
-					UIPopupNotify.singleton.Init(String.Format(popupWait, pc.GetCooldownTimeRemaining().ToString("F0")));
-					
-			}
-			else
-				OnClickConfirm();
-				
-		}
-		
-		// -------------------------------------------------------------------------------
-		// OnClickConfirm
-		// @Client
-		// -------------------------------------------------------------------------------
-		public override void OnClickConfirm()
-		{
-		
-			GameObject player = PlayerComponent.localPlayer;
-			
-			if (player == null)
-				return;
-			
-			PlayerComponent pc = player.GetComponentInParent<PlayerComponent>();
-			
-			if (player && targetZone != null && !String.IsNullOrWhiteSpace(targetAnchor) && pc.CheckCooldown)
-				pc.WarpRemote(targetAnchor, targetZone.name);
-			
-			base.OnClickConfirm();
-			
-			if (UIPopupNotify.singleton)
-				UIPopupNotify.singleton.Init(popupZoning, 5f, false);
-			
-		}
-		
-    	// -------------------------------------------------------------------------------
-    	
-	}
+        [Header("Teleportation")]
+        [Tooltip("Target Network Zone to teleport to (optional)")]
+        public NetworkZoneTemplate targetZone;
+        [Tooltip("Anchor name in the target scene to teleport to")]
+        public string targetAnchor;
+
+
+        public string popupZoning = "Zoning, please wait...";
+
+        // -------------------------------------------------------------------------------
+        // OnTriggerEnter
+        // @Client / @Server
+        // -------------------------------------------------------------------------------
+        public override void OnTriggerEnter(Collider co)
+        {
+
+            PlayerComponent pc = co.GetComponentInParent<PlayerComponent>();
+
+            // If other collider isTrigger, its just the user's sphere collider.
+            if (pc == null || !pc.IsLocalPlayer || co.isTrigger)
+                return;
+
+            // -- can we switch zones?
+            if (!ZoneManager.singleton.GetCanSwitchZone)
+            {
+                UIPopupNotify.singleton.Init(popupClosed);
+                return;
+            }
+
+            if (!triggerOnEnter)
+            {
+
+                if (pc.CheckCooldown)
+                    UIPopupPrompt.singleton.Init(String.Format(popupEnter, targetZone.title), OnClickConfirm);
+                else
+                    UIPopupNotify.singleton.Init(String.Format(popupWait, pc.GetCooldownTimeRemaining().ToString("F0")));
+
+            }
+            else
+                OnClickConfirm();
+
+        }
+
+        // -------------------------------------------------------------------------------
+        // OnClickConfirm
+        // @Client
+        // -------------------------------------------------------------------------------
+        public override void OnClickConfirm()
+        {
+
+            GameObject player = PlayerComponent.localPlayer;
+
+            if (player == null)
+                return;
+
+            PlayerComponent pc = player.GetComponentInParent<PlayerComponent>();
+
+            if (player && targetZone != null && !String.IsNullOrWhiteSpace(targetAnchor) && pc.CheckCooldown)
+                pc.WarpRemote(targetAnchor, targetZone.name);
+
+            base.OnClickConfirm();
+
+            if (UIPopupNotify.singleton)
+                UIPopupNotify.singleton.Init(popupZoning, 5f, false);
+
+        }
+
+        // -------------------------------------------------------------------------------
+
+    }
 
 }
 

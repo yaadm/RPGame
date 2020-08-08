@@ -6,69 +6,77 @@ using Mirror;
 
 namespace OpenMMO.Areas
 {
-    
+
     // ===================================================================================
-	// AreaPortal
-	// ===================================================================================
-	[DisallowMultipleComponent]
-    public partial class AreaPortal: NetworkBehaviour
+    // AreaPortal
+    // ===================================================================================
+    [DisallowMultipleComponent]
+    public partial class AreaPortal : NetworkBehaviour
     {
-    
-    	[Header("Sub Scene")]
+
+        [Header("Sub Scene")]
         [Tooltip("Assign the sub-scene(s) to load or unload for this area")]
         public UnityScene subScene;
-       
+
         // -------------------------------------------------------------------------------
-		// Awake
-		// -------------------------------------------------------------------------------
+        // Awake
+        // -------------------------------------------------------------------------------
         public void Awake()
         {
             Invoke(nameof(AwakeLate), 0.1f);
         }
-        
+
         // -------------------------------------------------------------------------------
-		// AwakeLate
-		// -------------------------------------------------------------------------------
+        // AwakeLate
+        // -------------------------------------------------------------------------------
         public void AwakeLate()
         {
             AreaManager.singleton.RegisterAreaPortal(subScene);
         }
-		
-		// -------------------------------------------------------------------------------
-		// OnDestroy
-		// -------------------------------------------------------------------------------
+
+        // -------------------------------------------------------------------------------
+        // OnDestroy
+        // -------------------------------------------------------------------------------
         public void OnDestroy()
         {
-        	if (AreaManager.singleton)
-            	AreaManager.singleton.UnRegisterAreaPortal(subScene);
+            if (AreaManager.singleton)
+                AreaManager.singleton.UnRegisterAreaPortal(subScene);
         }
 
-		// -------------------------------------------------------------------------------
-		// OnTriggerEnter
-		// @Server
-		// -------------------------------------------------------------------------------
+        // -------------------------------------------------------------------------------
+        // OnTriggerEnter
+        // @Server
+        // -------------------------------------------------------------------------------
         [Server]
         void OnTriggerEnter(Collider co)
         {
+            if (co.isTrigger)
+            {
+                return;
+            }
             NetworkIdentity ni = co.gameObject.GetComponentInParent<NetworkIdentity>();
             AreaManager.singleton.LoadScenesAdditive(ni, subScene);
         }
-        
-		// -------------------------------------------------------------------------------
-		// OnTriggerExit
-		// @Server
-		// -------------------------------------------------------------------------------
+
+        // -------------------------------------------------------------------------------
+        // OnTriggerExit
+        // @Server
+        // -------------------------------------------------------------------------------
         [Server]
         void OnTriggerExit(Collider co)
         {
+            if (co.isTrigger)
+            {
+                return;
+            }
             NetworkIdentity ni = co.gameObject.GetComponentInParent<NetworkIdentity>();
-           	AreaManager.singleton.UnloadScenesAdditive(ni, subScene);
+            AreaManager.singleton.UnloadScenesAdditive(ni, subScene);
         }
-        
+
         // -------------------------------------------------------------------------------
-        
+
     }
-    
+
     // ===================================================================================
-    
+
 }
