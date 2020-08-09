@@ -18,50 +18,34 @@ namespace OpenMMO.UI
 
         public Text targetName;
 
-        public GameObject healthBar;
+        public Image targetHealthBar;
 
-        public GameObject manaBar;
+        public Text targetHealthText;
 
-        protected PlayerControllerComponent targetingComponent;
+        public Image targetManaBar;
 
         public void onTargetLateUpdate()
         {
-            // should happen at OnStart ?
-            if (!targetingComponent)
-            {
-
-                if (!PlayerComponent.localPlayer)
-                {
-                    Debug.LogWarning("no local player yet...");
-                    return;
-                }
-
-                targetingComponent = PlayerComponent.localPlayer.GetComponent<PlayerControllerComponent>();
-
-                if (!targetingComponent)
-                {
-                    Debug.LogError("no targetingComponent !");
-                    return;
-                }
-            }
-
-            if (targetingComponent.currentTarget)
+            if (playerController.currentTarget)
             {
 
                 // TODO: update UI components to match the targeted player
 
-                PlayerComponent pc = targetingComponent.currentTarget.GetComponent<PlayerComponent>();
+                PlayerControllerComponent pcc = playerController.currentTarget.GetComponent<PlayerControllerComponent>();
 
-                if (pc)
+                if (pcc)
                 {
 
-                    targetName.text = pc.name;
-
+                    targetName.text = pcc.name;
+                    targetHealthBar.fillAmount = (float)pcc.currentHealth / (float)pcc.totalHealth;
+                    targetManaBar.fillAmount = (float)pcc.currentMana / (float)pcc.totalMana;
+                    targetHealthText.text = pcc.currentHealth.ToString() + "/" + pcc.totalHealth.ToString();
                     targetPannel.SetActive(true);
                 }
             }
             else
             {
+                // no target
                 targetPannel.SetActive(false);
             }
         }

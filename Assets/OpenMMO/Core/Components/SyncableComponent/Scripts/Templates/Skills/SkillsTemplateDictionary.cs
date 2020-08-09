@@ -11,22 +11,22 @@ namespace OpenMMO
 {
 
     // ===================================================================================
-    // StateTemplateDictionary
+    // SkillTemplateDictionary
     // ===================================================================================
-    public partial class StateTemplateDictionary
+    public partial class SkillTemplateDictionary
     {
 
-        public readonly ReadOnlyDictionary<int, StateTemplate> data;
+        public readonly ReadOnlyDictionary<int, SkillTemplate> data;
 
         // -------------------------------------------------------------------------------
-        public StateTemplateDictionary(string folderName = "")
+        public SkillTemplateDictionary(string folderName = "")
         {
-            List<StateTemplate> templates = Resources.LoadAll<StateTemplate>(folderName).ToList();
+            List<SkillTemplate> templates = Resources.LoadAll<SkillTemplate>(folderName).ToList();
 
             if (templates.HasDuplicates())
                 DebugManager.LogWarning("[Warning] Skipped loading due to duplicate(s) in Resources subfolder: " + folderName);
             else
-                data = new ReadOnlyDictionary<int, StateTemplate>(templates.ToDictionary(x => x.hash, x => x));
+                data = new ReadOnlyDictionary<int, SkillTemplate>(templates.ToDictionary(x => x.hash, x => x));
         }
 
         // -------------------------------------------------------------------------------

@@ -17,7 +17,7 @@ namespace OpenMMO
     public partial class PlayerControllerComponent : EntityControllerComponent
     {
         [Header("Player Movement Config")]
-        public PlayerControlConfig movementConfig;
+        public PlayerControlConfig controllerConfig;
 
 
 
@@ -25,7 +25,7 @@ namespace OpenMMO
         // LOAD DEFAULTS
         private void OnValidate()
         {
-            if (!movementConfig) movementConfig = Resources.Load<PlayerControlConfig>("Player/Movement/DefaultPlayerControls"); //LOAD DEFAULT
+            if (!controllerConfig) controllerConfig = Resources.Load<PlayerControlConfig>("Player/Movement/DefaultPlayerControls"); //LOAD DEFAULT
         }
 #endif
 
@@ -35,6 +35,7 @@ namespace OpenMMO
         protected override void Start()
         {
             agent.updateRotation = false;
+            Start_skills();
             base.Start();
         }
 
@@ -74,79 +75,10 @@ namespace OpenMMO
             if (!isLocalPlayer) return;
             if (Tools.AnyInputFocused) return;
 
-            // ***********************************
-            // Movement SYSTEM
-            // ***********************************
-
-            //MOVE
-            horizontalMovementInput = Input.GetAxis(movementConfig.moveAxisHorizontal.ToString());
-            verticalMovementInput = Input.GetAxis(movementConfig.moveAxisVertical.ToString());
-
-            //RUN - Toggle
-            if (Input.GetKeyDown(movementConfig.runKey))
-            {
-                running = !running;
-            }
-            //running = Input.GetKeyDown(movementConfig.runKey);
-
-            jump = Input.GetKeyDown(movementConfig.jumpKey);
-
-            UpdateVelocity(); //UPDATE VELOCITY
-
-            // ***********************************
-            // Targeting SYSTEM
-            // ***********************************
-
-            if (Input.GetKeyDown(movementConfig.targetKey))
-            {
-                onTargetButtonClicked();
-            }
-
-            if (Input.GetMouseButtonDown(0))
-            {
-                mouseDownPos = Input.mousePosition;
-            }
-
-            if (Input.GetMouseButtonUp(0))
-            {
-
-                if (Vector3.Distance(Input.mousePosition, mouseDownPos) < minClickDistance)
-                {
-                    // it was a click !
-
-                    // if clicked on UI, return
-                    if (EventSystem.current.IsPointerOverGameObject())
-                    {
-                        return;
-                    }
-
-                    RaycastHit hit;
-                    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-                    // gets only the first collider it founds ! not all in path.
-                    if (Physics.Raycast(ray, out hit))
-                    {
-                        if (hit.transform.tag == "Player")
-                        {
-                            currentTarget = hit.transform;
-                        }
-                        else
-                        {
-                            // Clicked on Game, but no "Player" objects found.
-                            currentTarget = null;
-                        }
-                    }
-                    else
-                    {
-                        // Clicked on Game, but no objects found.
-                        currentTarget = null;
-                    }
-                }
-                else
-                {
-                    // it was a drag
-                }
-            }
+            // ORDER IS IMPORTANT !
+            UpdateClient_movement();
+            UpdateClient_targeting();
+            UpdateClient_skills();
 
             base.UpdateClient();
             this.InvokeInstanceDevExtMethods(nameof(UpdateClient)); //HOOK
@@ -163,6 +95,20 @@ namespace OpenMMO
         }
 
         // -------------------------------------------------------------------------------
+
+        // -------------------------------------------------------------------------------
+        // FixedUpdateClient
+        // @Client
+        // -------------------------------------------------------------------------------
+        [Client]
+        protected override void FixedUpdateClient()
+        {
+
+            FixedUpdateClient_movement();
+            FixedUpdateClient_targeting();
+            FixedUpdateClient_skills();
+
+        }
 
     }
 

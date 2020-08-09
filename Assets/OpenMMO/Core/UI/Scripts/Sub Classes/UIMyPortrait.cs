@@ -14,20 +14,29 @@ namespace OpenMMO.UI
         [Header("My Portrait")]
         public Text myName;
 
-        public GameObject myHealthBar;
+        public Image myHealthBar;
 
-        public GameObject myManaBar;
+        public Text myHealthText;
+
+        public Image myManaBar;
 
         private bool nameUpdated;
 
         public void onPortraitLateUpdate()
         {
-            if (PlayerComponent.localPlayer)
+            if (playerController)
             {
                 if (!nameUpdated)
                 {
-                    myName.text = PlayerComponent.localPlayer.name;
+                    nameUpdated = true;
+                    myName.text = playerController.name;
                 }
+
+                // TODO: check only if mana or health are updated (they will not be most of the time)
+
+                myHealthText.text = playerController.currentHealth.ToString() + "/" + playerController.totalHealth.ToString();
+                myHealthBar.fillAmount = (float)playerController.currentHealth / (float)playerController.totalHealth;
+                myManaBar.fillAmount = (float)playerController.currentMana / (float)playerController.totalMana;
             }
         }
     }

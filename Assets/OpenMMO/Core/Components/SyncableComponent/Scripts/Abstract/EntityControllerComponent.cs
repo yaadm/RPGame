@@ -36,6 +36,18 @@ namespace OpenMMO
 
         protected bool isPlayerGrounded;
 
+        [SyncVar]
+        public int totalHealth;
+
+        [SyncVar]
+        public int currentHealth;
+
+        [SyncVar]
+        public int totalMana;
+
+        [SyncVar]
+        public int currentMana;
+
         // -------------------------------------------------------------------------------
         // Start
         // @Server / @Client
@@ -47,6 +59,14 @@ namespace OpenMMO
             animator = GetComponent<Animator>();
             playerRigidbody.GetComponent<Rigidbody>();
             entityComponent = GetComponent<EntityComponent>();
+
+            totalHealth = 100;
+
+            currentHealth = totalHealth;
+
+            totalMana = 100;
+
+            currentMana = totalMana;
 
             base.Start();
         }
@@ -67,6 +87,7 @@ namespace OpenMMO
                     return;
                 }
             }
+
 
             this.InvokeInstanceDevExtMethods(nameof(UpdateServer)); //HOOK
 

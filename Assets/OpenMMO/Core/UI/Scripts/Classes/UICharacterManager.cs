@@ -12,7 +12,7 @@ namespace OpenMMO.UI
     public partial class UICharacterManager : UIManager
     {
 
-
+        protected PlayerControllerComponent playerController;
 
 #if UNITY_EDITOR
         // LOAD DEFAULTS
@@ -34,13 +34,13 @@ namespace OpenMMO.UI
                 return;
             }
 
-            if (!healthBar)
+            if (!targetHealthBar)
             {
                 Debug.LogError("No healthBar Pannel !");
                 return;
             }
 
-            if (!manaBar)
+            if (!targetManaBar)
             {
                 Debug.LogError("No manaBar Pannel !");
                 return;
@@ -63,10 +63,10 @@ namespace OpenMMO.UI
                 if (targetPannel)
                 {
 
-                    if (targetingComponent)
+                    if (playerController)
                     {
 
-                        targetingComponent.onTargetButtonClicked();
+                        playerController.onTargetButtonClicked();
                     }
                     else
                     {
@@ -83,14 +83,46 @@ namespace OpenMMO.UI
                 }
             });
 
+            BasicAttack.onClick.SetListener(() =>
+            {
+                if (playerController)
+                {
+
+                    playerController.onSkillClicked();
+                }
+                else
+                {
+
+                    Debug.LogError("No targetingComponent !");
+                }
+            });
         }
 
         void LateUpdate()
         {
+            if (!playerController)
+            {
+
+                if (!PlayerComponent.localPlayer)
+                {
+                    Debug.LogWarning("no local player yet...");
+                    return;
+                }
+
+                playerController = PlayerComponent.localPlayer.GetComponent<PlayerControllerComponent>();
+
+                if (!playerController)
+                {
+                    Debug.LogError("no targetingComponent !");
+                    return;
+                }
+            }
 
             onTargetLateUpdate();
 
             onPortraitLateUpdate();
+
+            onSkillsBarLateUpdate();
         }
 
     }

@@ -10,28 +10,39 @@ namespace OpenMMO
 {
 
     // ===================================================================================
-    // StateTemplate
+    // ItemTemplate
     // ===================================================================================
-    public abstract partial class StateTemplate : BaseTemplate
+    public abstract partial class ItemTemplate : BaseTemplate
     {
 
         public static string _folderName = "";
 
-        static StateTemplateDictionary _data;
+        static ItemsTemplateDictionary _data;
 
-        // -------------------------------------------------------------------------------
-        // GetIsActive
-        // -------------------------------------------------------------------------------
-        public abstract bool GetIsActive(EntityComponent entityComponent);
+        [Tooltip("Icon used to visualize this template (Item icon, Buff icon etc.)")]
+        public Sprite smallIcon;
+        [Tooltip("Background of icon used to visualize this template (background will be visible on icons with transparency)")]
+        public Sprite backgroundIcon;
+        [Tooltip("Rarity of the template (commonly used by Items, Currencies, Equipment etc.)")]
+        public RarityTemplate rarity;
+
+        [Tooltip("Description of the template used as part of it's tooltip")]
+        [TextArea(15, 20)]
+        public string description;
+
+        [Tooltip("3D World representation of the item")]
+        public GameObject prefab;
+
+        public Itemtype itemtype;
 
         // -------------------------------------------------------------------------------
         // data
         // -------------------------------------------------------------------------------
-        public static ReadOnlyDictionary<int, StateTemplate> data
+        public static ReadOnlyDictionary<int, ItemTemplate> data
         {
             get
             {
-                StateTemplate.BuildCache();
+                ItemTemplate.BuildCache();
                 return _data.data;
             }
         }
@@ -42,7 +53,7 @@ namespace OpenMMO
         public static void BuildCache(bool forced = false)
         {
             if (_data == null || forced)
-                _data = new StateTemplateDictionary(StateTemplate._folderName);
+                _data = new ItemsTemplateDictionary(ItemTemplate._folderName);
         }
 
         // -------------------------------------------------------------------------------

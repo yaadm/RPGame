@@ -10,28 +10,29 @@ namespace OpenMMO
 {
 
     // ===================================================================================
-    // StateTemplate
+    // SkillTemplate
     // ===================================================================================
-    public abstract partial class StateTemplate : BaseTemplate
+    public abstract partial class SkillTemplate : BaseTemplate
     {
 
         public static string _folderName = "";
 
-        static StateTemplateDictionary _data;
+        static SkillTemplateDictionary _data;
 
-        // -------------------------------------------------------------------------------
-        // GetIsActive
-        // -------------------------------------------------------------------------------
-        public abstract bool GetIsActive(EntityComponent entityComponent);
+        [Header("Skill Info")]
+        public float cooldown;
+
+        // base amount of damage / healing
+        public int baseImpact;
 
         // -------------------------------------------------------------------------------
         // data
         // -------------------------------------------------------------------------------
-        public static ReadOnlyDictionary<int, StateTemplate> data
+        public static ReadOnlyDictionary<int, SkillTemplate> data
         {
             get
             {
-                StateTemplate.BuildCache();
+                SkillTemplate.BuildCache();
                 return _data.data;
             }
         }
@@ -42,7 +43,7 @@ namespace OpenMMO
         public static void BuildCache(bool forced = false)
         {
             if (_data == null || forced)
-                _data = new StateTemplateDictionary(StateTemplate._folderName);
+                _data = new SkillTemplateDictionary(SkillTemplate._folderName);
         }
 
         // -------------------------------------------------------------------------------

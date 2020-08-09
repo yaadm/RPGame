@@ -29,7 +29,7 @@ namespace OpenMMO
         public ArchetypeTemplate archeType;
 
         // -- Component Cache
-        [HideInInspector] public EntityControllerComponent movementComponent;
+        [HideInInspector] public EntityControllerComponent controllerComponent;
 
         // -------------------------------------------------------------------------------
         // 
@@ -38,7 +38,7 @@ namespace OpenMMO
         {
             proxChecker = GetComponent<NetworkProximityChecker>();
 
-            movementComponent = gameObject.GetComponent<EntityControllerComponent>();
+            controllerComponent = gameObject.GetComponent<EntityControllerComponent>();
 
             base.Start();
         }

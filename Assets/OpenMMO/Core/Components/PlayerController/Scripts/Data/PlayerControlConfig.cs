@@ -33,7 +33,7 @@ namespace OpenMMO
     public class PlayerControlConfig : ScriptableObject
     {
 
-        [Header("Input Keys")]
+        [Header("Movement Input Keys")]
         public KeyCode runKey = KeyCode.Slash;
 
         //MOVE
@@ -60,6 +60,9 @@ namespace OpenMMO
         //JUMP
         [Tooltip("Scales speed while running. 1.0f = normal speed")]
         [Range(0, 10)] public float jumpSpeedScale = 2f;
+
+        [Header("Skills Input Keys")]
+        public KeyCode skillbarSlot_0 = KeyCode.Keypad1;
 
     }
 }

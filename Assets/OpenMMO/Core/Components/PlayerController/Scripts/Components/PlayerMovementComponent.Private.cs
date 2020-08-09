@@ -34,6 +34,29 @@ namespace OpenMMO
         protected bool running;
         protected bool jump;
 
+
+        private void UpdateClient_movement()
+        {
+            // ***********************************
+            // Movement SYSTEM
+            // ***********************************
+
+            //MOVE
+            horizontalMovementInput = Input.GetAxis(controllerConfig.moveAxisHorizontal.ToString());
+            verticalMovementInput = Input.GetAxis(controllerConfig.moveAxisVertical.ToString());
+
+            //RUN - Toggle
+            if (Input.GetKeyDown(controllerConfig.runKey))
+            {
+                running = !running;
+            }
+            //running = Input.GetKeyDown(movementConfig.runKey);
+
+            jump = Input.GetKeyDown(controllerConfig.jumpKey);
+
+            UpdateVelocity(); //UPDATE VELOCITY
+        }
+
         // -------------------------------------------------------------------------------
         // UpdateVelocity
         // This recalculates the agent velocity based on the current input axis'
@@ -57,8 +80,8 @@ namespace OpenMMO
                 Vector3 direction = rotation * input;
 
                 // calc movement speed factor
-                float factor = running ? movementConfig.runSpeedScale : movementConfig.walkSpeedScale;
-                Vector3 newVelocity = direction * agent.speed * factor * movementConfig.moveSpeedMultiplier;
+                float factor = running ? controllerConfig.runSpeedScale : controllerConfig.walkSpeedScale;
+                Vector3 newVelocity = direction * agent.speed * factor * controllerConfig.moveSpeedMultiplier;
 
                 // rotate player at X,Z axis to target
                 transform.LookAt(transform.position + direction, Vector3.up);
@@ -87,12 +110,12 @@ namespace OpenMMO
 
                     // NavMeshAgent cant Jump ! - as far as we know :) 
                     // maybe try YOffset ?
-                    agent.velocity += Vector3.up * agent.speed * movementConfig.jumpSpeedScale * movementConfig.jumpSpeedMultiplier;
+                    agent.velocity += Vector3.up * agent.speed * controllerConfig.jumpSpeedScale * controllerConfig.jumpSpeedMultiplier;
                 }
                 else
                 {
 
-                    playerRigidbody.AddForce(0, agent.speed * movementConfig.jumpSpeedScale * movementConfig.jumpSpeedMultiplier, 0, ForceMode.Impulse);
+                    playerRigidbody.AddForce(0, agent.speed * controllerConfig.jumpSpeedScale * controllerConfig.jumpSpeedMultiplier, 0, ForceMode.Impulse);
                 }
             }
 
@@ -101,37 +124,14 @@ namespace OpenMMO
 
         // S E R V E R  A U T H O R I T A T I V E  M O V E M E N T
 
-        // -------------------------------------------------------------------------------
-        // FixedUpdateClient
-        // @Client
-        // -------------------------------------------------------------------------------
-        [Client]
-        protected override void FixedUpdateClient()
+        private void FixedUpdateClient_movement()
         {
             if (isLocalPlayer && ReadyToMove() && Camera.main) // CHECK FOR THROTTLING
             {
                 Cmd_UpdateMovementState(new MovementStateInfo(transform.position, transform.rotation, Camera.main.transform.eulerAngles.y, verticalMovementInput, horizontalMovementInput, running, jump));
                 LogMovement();
             }
-
         }
-
-        // -------------------------------------------------------------------------------
-        // ReadyToMove
-        // -------------------------------------------------------------------------------
-        /// <summary>Movement Throttling</summary>
-        /// <returns>Enough time has passed...ready to move again.</returns>
-        protected bool ReadyToMove() { return Time.time > _timerMovement; }
-
-        // -------------------------------------------------------------------------------
-        // LogMovement
-        // -------------------------------------------------------------------------------
-        /// <summary>Logs the last time that movement was processed.</summary>
-        private void LogMovement()
-        {
-            _timerMovement = Time.time + movementUpdateInterval;
-        }
-
 
         // -------------------------------------------------------------------------------
         // Cmd_UpdateState
@@ -235,6 +235,23 @@ namespace OpenMMO
             {
                 isPlayerGrounded = false;
             }
+        }
+
+
+        // -------------------------------------------------------------------------------
+        // ReadyToMove
+        // -------------------------------------------------------------------------------
+        /// <summary>Movement Throttling</summary>
+        /// <returns>Enough time has passed...ready to move again.</returns>
+        protected bool ReadyToMove() { return Time.time > _timerMovement; }
+
+        // -------------------------------------------------------------------------------
+        // LogMovement
+        // -------------------------------------------------------------------------------
+        /// <summary>Logs the last time that movement was processed.</summary>
+        private void LogMovement()
+        {
+            _timerMovement = Time.time + movementUpdateInterval;
         }
     }
 
