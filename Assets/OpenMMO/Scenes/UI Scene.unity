@@ -19204,6 +19204,11 @@ PrefabInstance:
       propertyPath: hotKey
       value: 324
       objectReference: {fileID: 0}
+    - target: {fileID: 3321310163593043543, guid: 611e62c0a05c846f290a8a241b21e0cc,
+        type: 3}
+      propertyPath: distance
+      value: 25
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 611e62c0a05c846f290a8a241b21e0cc, type: 3}
 --- !u!1001 &3643051270035785820

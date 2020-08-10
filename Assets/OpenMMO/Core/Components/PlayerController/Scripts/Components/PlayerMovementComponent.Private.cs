@@ -19,7 +19,7 @@ namespace OpenMMO
         [Header("Performance")]
         [Tooltip("How often are movement updates sent to the server (in seconds)?")]
         [Range(0.01f, 99)]
-        public double movementUpdateInterval = 1f;
+        public double movementUpdateInterval = 0.1f;
 
         double _timerMovement = 0;
 
@@ -37,10 +37,6 @@ namespace OpenMMO
 
         private void UpdateClient_movement()
         {
-            if (isDead())
-            {
-                return;
-            }
 
             //MOVE
             horizontalMovementInput = Input.GetAxis(controllerConfig.moveAxisHorizontal.ToString());
@@ -51,7 +47,6 @@ namespace OpenMMO
             {
                 running = !running;
             }
-            //running = Input.GetKeyDown(movementConfig.runKey);
 
             jump = Input.GetKeyDown(controllerConfig.jumpKey);
 
@@ -65,6 +60,15 @@ namespace OpenMMO
         // -------------------------------------------------------------------------------
         protected virtual void UpdateVelocity()
         {
+
+            if (isDead())
+            {
+                // stop moving (X,Z) axis on death.
+                Vector3 newVelocity = new Vector3(0, playerRigidbody.velocity.y, 0);
+                playerRigidbody.velocity = newVelocity;
+
+                return;
+            }
 
             if (verticalMovementInput != 0 || horizontalMovementInput != 0)
             {
@@ -83,7 +87,17 @@ namespace OpenMMO
                 Vector3 direction = rotation * input;
 
                 // calc movement speed factor
-                float factor = running ? controllerConfig.runSpeedScale : controllerConfig.walkSpeedScale;
+
+                float factor = 0;
+                if (isPlayerGrounded)
+                {
+                    factor = running ? controllerConfig.runSpeedScale : controllerConfig.walkSpeedScale;
+                }
+                else
+                {
+                    factor = controllerConfig.moveInAirSpeedScale;
+                }
+
                 Vector3 newVelocity = direction * agent.speed * factor * controllerConfig.moveSpeedMultiplier;
 
                 // rotate player at X,Z axis to target
@@ -100,6 +114,13 @@ namespace OpenMMO
                     newVelocity.y = playerRigidbody.velocity.y;
                     playerRigidbody.velocity = newVelocity;
                 }
+            }
+            else
+            {
+                // stop movement !
+                // dont affect current Y axis velocity
+                Vector3 newVelocity = new Vector3(0, playerRigidbody.velocity.y, 0);
+                playerRigidbody.velocity = newVelocity;
             }
 
 

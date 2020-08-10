@@ -71,9 +71,15 @@ namespace OpenMMO
             base.Start();
         }
 
-        protected bool isDead()
+        public bool isDead()
         {
             return currentHealth <= 0;
+        }
+
+        public void reviveCurrentStats()
+        {
+            currentHealth = totalHealth;
+            //TODO: mana ? energy ?
         }
 
         protected void takeDamage(int damage)

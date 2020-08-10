@@ -60,6 +60,9 @@ namespace OpenMMO
         //JUMP
         [Tooltip("Scales speed while running. 1.0f = normal speed")]
         [Range(0, 10)] public float jumpSpeedScale = 2f;
+        //JUMP
+        [Tooltip("Scales speed while running. 1.0f = normal speed")]
+        [Range(0, 10)] public float moveInAirSpeedScale = .2f;
 
         [Header("Skills Input Keys")]
         public KeyCode skillbarSlot_0 = KeyCode.Keypad1;

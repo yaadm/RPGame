@@ -139,7 +139,7 @@ namespace OpenMMO
 
         public virtual void onTargetButtonClicked()
         {
-            clearDeadFromNearbyenemiesList();
+            clearDeadFromNearbyEnemiesList();
             // If no nearby players.
             if (nearbyEnemies.Count <= 0)
             {
@@ -188,7 +188,7 @@ namespace OpenMMO
             }
         }
 
-        void clearDeadFromNearbyenemiesList()
+        void clearDeadFromNearbyEnemiesList()
         {
             List<PlayerControllerComponent> nearbyEnemiesToRemove = new List<PlayerControllerComponent>();
             for (int i = 0; i < nearbyEnemies.Count; i++)

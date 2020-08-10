@@ -77,38 +77,45 @@ namespace OpenMMO
                 GameObject player = PlayerComponent.localPlayer;
 
                 if (player)
+                {
+
+                    // 1st time we attach camera to player
                     target = player.transform;
+
+                    // put camera in 45 deg
+                    yDeg = 45f;
+                    xDeg = target.rotation.eulerAngles.y;
+                }
                 else
                     return;
             }
 
-            
+
 
             // If either mouse buttons are down, let the mouse govern camera position 
             // OR: if the input key is pressed and not currently any other input active
-            if (Input.GetMouseButton(0) || (Input.GetKey(hotKey) && !Tools.AnyInputFocused))
+            if ((Input.GetMouseButton(0) || (Input.GetKey(hotKey)))) // && !Tools.AnyInputFocused
             {
 
-                if (isCameraLocked) {
+                if (isCameraLocked)
+                {
                     return;
                 }
 
                 // if mouse click on ui element, return.
-                if(EventSystem.current.IsPointerOverGameObject()){
+                if (EventSystem.current.IsPointerOverGameObject())
+                {
                     isCameraLocked = true;
                     return;
                 }
 
-                
+
                 xDeg += Input.GetAxis("Mouse X") * xSpeed * 0.02f;
                 yDeg -= Input.GetAxis("Mouse Y") * ySpeed * 0.02f;
 
-                if (Input.GetMouseButton(1))
-                {
-                    // make the player follow camera rotation
-                    //target.eulerAngles = new Vector3(target.eulerAngles.x, transform.eulerAngles.y, target.eulerAngles.z);
-                }
-            } else {
+            }
+            else
+            {
                 isCameraLocked = false;
             }
             // otherwise, ease behind the target if any of the directional keys are pressed 
@@ -121,7 +128,7 @@ namespace OpenMMO
 
             yDeg = Tools.ClampAngleBetweenMinAndMax(yDeg, yMinLimit, yMaxLimit);
 
-            // set camera rotation 
+            // set camera rotation -- YAADM: did he make y,x as y,x for a reason ?
             Quaternion rotation = Quaternion.Euler(yDeg, xDeg, 0);
 
             // calculate the desired distance 
