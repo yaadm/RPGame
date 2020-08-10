@@ -25,7 +25,7 @@ namespace OpenMMO.UI
         {
             button.onClick.SetListener(() =>
             {
-
+                Debug.Log("OnClick()");
                 if (uiPanel)
                     uiPanel.Toggle();
                 else

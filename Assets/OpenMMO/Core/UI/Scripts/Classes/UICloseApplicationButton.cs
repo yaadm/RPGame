@@ -1,4 +1,5 @@
 //BY DX4D
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 using OpenMMO.Network;
@@ -14,6 +15,8 @@ namespace OpenMMO.UI
         [SerializeField] Button quitButton;
 #pragma warning restore CS0649
 
+        public string popupEnter = "Are you sure you want to quit ?";
+
         //ENABLE
         void OnEnable()
         {
@@ -22,9 +25,16 @@ namespace OpenMMO.UI
         //ON CLOSE BUTTON CLICKED
         void OnCloseButtonClicked()
         {
+            UIPopupPrompt.singleton.Init(String.Format(popupEnter), OnClickConfirm);
+        }
+
+
+        void OnClickConfirm()
+        {
             NetworkManager.singleton.Quit();
             //Quit();
         }
+
         /*
         //QUIT
         void Quit()
