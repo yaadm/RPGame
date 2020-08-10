@@ -37,9 +37,10 @@ namespace OpenMMO
 
         private void UpdateClient_movement()
         {
-            // ***********************************
-            // Movement SYSTEM
-            // ***********************************
+            if (isDead())
+            {
+                return;
+            }
 
             //MOVE
             horizontalMovementInput = Input.GetAxis(controllerConfig.moveAxisHorizontal.ToString());
@@ -74,6 +75,8 @@ namespace OpenMMO
 
                 // calc camera rotation to move relative to
                 Vector3 angles = new Vector3(0, IsLocalPlayer ? Camera.main.transform.eulerAngles.y : cameraYRotation, 0);
+
+                // actually we dont have to use Quaternions, we rotate only on y axis, so no axis locks possible.. but wth...
                 Quaternion rotation = Quaternion.Euler(angles);
 
                 // calc movement direction

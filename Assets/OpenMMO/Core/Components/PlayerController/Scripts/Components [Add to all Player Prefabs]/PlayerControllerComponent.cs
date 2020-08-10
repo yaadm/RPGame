@@ -19,8 +19,6 @@ namespace OpenMMO
         [Header("Player Movement Config")]
         public PlayerControlConfig controllerConfig;
 
-
-
 #if UNITY_EDITOR
         // LOAD DEFAULTS
         private void OnValidate()
@@ -35,7 +33,6 @@ namespace OpenMMO
         protected override void Start()
         {
             agent.updateRotation = false;
-            Start_skills();
             base.Start();
         }
 
@@ -104,6 +101,7 @@ namespace OpenMMO
         protected override void FixedUpdateClient()
         {
 
+            // ORDER IS IMPORTANT !
             FixedUpdateClient_movement();
             FixedUpdateClient_targeting();
             FixedUpdateClient_skills();

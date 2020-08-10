@@ -37,9 +37,12 @@ namespace OpenMMO.UI
                 {
 
                     targetName.text = pcc.name;
+                    targetHealthText.text = pcc.currentHealth.ToString() + "/" + pcc.totalHealth.ToString();
+
+                    // TODO: animate the bar lowering down.
                     targetHealthBar.fillAmount = (float)pcc.currentHealth / (float)pcc.totalHealth;
                     targetManaBar.fillAmount = (float)pcc.currentMana / (float)pcc.totalMana;
-                    targetHealthText.text = pcc.currentHealth.ToString() + "/" + pcc.totalHealth.ToString();
+
                     targetPannel.SetActive(true);
                 }
             }

@@ -35,6 +35,8 @@ namespace OpenMMO.UI
                 // TODO: check only if mana or health are updated (they will not be most of the time)
 
                 myHealthText.text = playerController.currentHealth.ToString() + "/" + playerController.totalHealth.ToString();
+
+                // TODO: animate the bar lowering down.
                 myHealthBar.fillAmount = (float)playerController.currentHealth / (float)playerController.totalHealth;
                 myManaBar.fillAmount = (float)playerController.currentMana / (float)playerController.totalMana;
             }

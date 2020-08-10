@@ -20,13 +20,13 @@ namespace OpenMMO
 
         bool clickedSkill;
 
-        private void Start_skills()
-        {
-
-        }
-
         private void UpdateClient_skills()
         {
+
+            if (isDead())
+            {
+                return;
+            }
 
             if (Input.GetKeyDown(controllerConfig.skillbarSlot_0))
             {
@@ -44,6 +44,10 @@ namespace OpenMMO
         {
             if (isLocalPlayer && clickedSkill)
             {
+                if (currentTarget.GetComponent<PlayerControllerComponent>().isDead())
+                {
+                    onTargetButtonClicked();
+                }
                 clickedSkill = false;
                 onSkillClicked();
             }
@@ -74,7 +78,7 @@ namespace OpenMMO
 
                 PlayerControllerComponent pc = currentTarget.GetComponent<PlayerControllerComponent>();
 
-                pc.currentHealth -= 10;
+                pc.takeDamage(10);
 
                 success = true;
             }

@@ -22,7 +22,7 @@ namespace OpenMMO
         [SyncVar]
         public Transform currentTarget;
 
-        private List<Transform> nearbyPlayers = new List<Transform>();
+        private List<PlayerControllerComponent> nearbyEnemies = new List<PlayerControllerComponent>();
 
         private bool switchTarget = false;
 
@@ -139,8 +139,9 @@ namespace OpenMMO
 
         public virtual void onTargetButtonClicked()
         {
+            clearDeadFromNearbyenemiesList();
             // If no nearby players.
-            if (nearbyPlayers.Count <= 0)
+            if (nearbyEnemies.Count <= 0)
             {
                 setTarget(null);
                 return;
@@ -148,15 +149,16 @@ namespace OpenMMO
 
             if (currentTarget)
             {
-                int index = nearbyPlayers.IndexOf(currentTarget);
+                PlayerControllerComponent targetPcc = currentTarget.GetComponent<PlayerControllerComponent>();
+                int index = nearbyEnemies.IndexOf(targetPcc);
 
                 // current target doest not exists in nearbyPlayers
-                if (index > nearbyPlayers.Count - 1 || index < 0)
+                if (index > nearbyEnemies.Count - 1 || index < 0)
                 {
                     // current target is not available \ out of range
 
                     // get closest enemy
-                    setTarget(nearbyPlayers[0]);
+                    setTarget(nearbyEnemies[0].GetComponent<Transform>());
                 }
                 else
                 {
@@ -165,25 +167,39 @@ namespace OpenMMO
                     index++;
 
                     // if next index is out of bounds, start again from index 0;
-                    if (index > nearbyPlayers.Count - 1)
+                    if (index > nearbyEnemies.Count - 1)
                     {
                         index = 0;
                     }
 
                     // if after target rotation we reached the same target, dont set new target.
                     // could happen if there is only one enemy in range, and we try to get new target. (we dont want the target sound to play again)
-                    if (nearbyPlayers[index] != currentTarget)
+                    if (nearbyEnemies[index] != currentTarget)
                     {
 
-                        setTarget(nearbyPlayers[index]);
+                        setTarget(nearbyEnemies[index].GetComponent<Transform>());
                     }
                 }
             }
             else
             {
                 // dont have a target yet, target first available.
-                setTarget(nearbyPlayers[0]);
+                setTarget(nearbyEnemies[0].GetComponent<Transform>());
             }
+        }
+
+        void clearDeadFromNearbyenemiesList()
+        {
+            List<PlayerControllerComponent> nearbyEnemiesToRemove = new List<PlayerControllerComponent>();
+            for (int i = 0; i < nearbyEnemies.Count; i++)
+            {
+                PlayerControllerComponent pcc = nearbyEnemies[i];
+                if (pcc.isDead())
+                {
+                    nearbyEnemiesToRemove.Add(pcc);
+                }
+            }
+            nearbyEnemies.RemoveAll(item => nearbyEnemiesToRemove.Contains(item));
         }
 
         void OnTriggerEnter(Collider other)
@@ -191,11 +207,15 @@ namespace OpenMMO
             if (other.tag == "Player")
             {
                 //TODO: check if enemy
-
-                if (!nearbyPlayers.Contains(other.transform))
+                PlayerControllerComponent otherPcc = other.transform.GetComponent<PlayerControllerComponent>();
+                if (otherPcc.isDead())
+                {
+                    return;
+                }
+                if (!nearbyEnemies.Contains(otherPcc))
                 {
                     // add enemy to nearby list.
-                    nearbyPlayers.Add(other.transform);
+                    nearbyEnemies.Add(otherPcc);
                 }
             }
         }
@@ -206,22 +226,22 @@ namespace OpenMMO
             {
                 //TODO: check if enemy ? i dont think we need to check that... maybe...
 
-                if (nearbyPlayers.Contains(other.transform))
+                if (nearbyEnemies.Contains(other.transform.GetComponent<PlayerControllerComponent>()))
                 {
                     // remove enemy from nearby list.
-                    nearbyPlayers.Remove(other.transform);
+                    nearbyEnemies.Remove(other.transform.GetComponent<PlayerControllerComponent>());
                 }
             }
         }
 
-        void Sort()
-        {
-            //TODO: should only occure once you enter combat !
-            nearbyPlayers.Sort(delegate (Transform a, Transform b)
-            {
-                return Vector3.Distance(transform.position, a.transform.position).CompareTo(Vector3.Distance(transform.position, b.transform.position));
-            });
-        }
+        // void Sort()
+        // {
+        //     //TODO: should only occure once you enter combat !
+        //     nearbyPlayers.Sort(delegate (Transform a, Transform b)
+        //     {
+        //         return Vector3.Distance(transform.position, a.transform.position).CompareTo(Vector3.Distance(transform.position, b.transform.position));
+        //     });
+        // }
 
         public Transform haveTarget()
         {

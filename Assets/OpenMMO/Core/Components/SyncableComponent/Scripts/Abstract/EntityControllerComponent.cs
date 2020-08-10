@@ -71,6 +71,22 @@ namespace OpenMMO
             base.Start();
         }
 
+        protected bool isDead()
+        {
+            return currentHealth <= 0;
+        }
+
+        protected void takeDamage(int damage)
+        {
+            //TODO: reduce damage by my resistance / armor..
+
+            currentHealth -= damage;
+            if (currentHealth < 0)
+            {
+                currentHealth = 0;
+            }
+        }
+
         // -------------------------------------------------------------------------------
         // UpdateServer
         // @Server
