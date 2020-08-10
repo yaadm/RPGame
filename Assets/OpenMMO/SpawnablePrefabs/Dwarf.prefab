@@ -101,7 +101,7 @@ PrefabInstance:
         type: 3}
       propertyPath: archeType
       value: 
-      objectReference: {fileID: 11400000, guid: 23ccce11a08934912ba41bb76c4c972d,
+      objectReference: {fileID: 11400000, guid: 536f601b9f7681043a6f2bd6b13d255e,
         type: 2}
     - target: {fileID: 5053945538751103481, guid: 646f03a0ef17d3b49962414b11da55f6,
         type: 3}
