@@ -66,6 +66,8 @@ namespace OpenMMO.Chat
                 go.GetComponent<Button>().onClick.SetListener(() => { OnSkillSelected(skill); });
 
                 Canvas.ForceUpdateCanvases();
+
+                // do we need this ? (i think its for scrolling down when getting new item.. if true, DELETE it)
                 scrollRect.verticalNormalizedPosition = 0;
             }
         }

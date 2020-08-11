@@ -1,4 +1,6 @@
+using System.Net.Mime;
 //BY DX4D
+using UnityEngine.UI;
 using UnityEngine;
 using OpenMMO.UI;
 using TMPro;
@@ -8,9 +10,14 @@ namespace OpenMMO.Chat
     public partial class UISkillMenuSlot : UIButton
     {
 #pragma warning disable CS0649
-        [Header("TEXT LABEL")]
-        [SerializeField] TextMeshProUGUI label;
+        [Header("Name LABEL")]
+        [SerializeField] TextMeshProUGUI nameText;
+
+        [Header("Base Damage LABEL")]
+        [SerializeField] TextMeshProUGUI baseDamageText;
 #pragma warning restore CS0649
+
+        public Image skillIcon;
 
         [HideInInspector]
         SkillTemplate skill;
@@ -20,7 +27,10 @@ namespace OpenMMO.Chat
         {
             // set skillTemplate to ui elements
             skill = _skill;
-            label.text = _skill.name;
+            nameText.text = _skill.name;
+            baseDamageText.text = _skill.baseImpact.ToString();
+            skillIcon.sprite = _skill.icon;
+
         }
     }
 }
