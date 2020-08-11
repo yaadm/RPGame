@@ -132,8 +132,13 @@ namespace OpenMMO
             Quaternion rotation = Quaternion.Euler(yDeg, xDeg, 0);
 
             // calculate the desired distance 
-            desiredDistance -= Input.GetAxis("Mouse ScrollWheel") * Time.deltaTime * zoomRate * Mathf.Abs(desiredDistance);
-            desiredDistance = Mathf.Clamp(desiredDistance, minDistance, maxDistance);
+
+            // dont scroll is mouse over UI element
+            if (!EventSystem.current.IsPointerOverGameObject())
+            {
+                desiredDistance -= Input.GetAxis("Mouse ScrollWheel") * Time.deltaTime * zoomRate * Mathf.Abs(desiredDistance);
+                desiredDistance = Mathf.Clamp(desiredDistance, minDistance, maxDistance);
+            }
             correctedDistance = desiredDistance;
 
             // calculate desired camera position

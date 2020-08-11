@@ -121,7 +121,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2316287631014448857}
-  - component: {fileID: 8014951793236864300}
+  - component: {fileID: 8980765251892594051}
   m_Layer: 5
   m_Name: SETTINGSWINDOW
   m_TagString: Untagged
@@ -149,7 +149,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 300, y: 300}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &8014951793236864300
+--- !u!114 &8980765251892594051
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -158,7 +158,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2219892098422136214}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b6bea7a5a60e68749b12891e5f24a3fd, type: 3}
+  m_Script: {fileID: 11500000, guid: 1f90695858c8c4e45a8ae7ff70763027, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   root: {fileID: 6319731408927717266}
@@ -169,9 +169,9 @@ MonoBehaviour:
   eventHide:
     m_PersistentCalls:
       m_Calls: []
-  requiresActiveRoot: 0
+  requiresActiveRoot: 1
   updateInterval: 0.25
-  characterPanel: {fileID: 0}
+  settingsPanel: {fileID: 0}
 --- !u!1 &2457942485995196701
 GameObject:
   m_ObjectHideFlags: 0
@@ -232,6 +232,8 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
