@@ -25,6 +25,10 @@ namespace OpenMMO
         // base amount of damage / healing
         public int baseImpact;
 
+        public List<ClassTemplate> availableForClasses;
+
+        public string animationName;
+
         // -------------------------------------------------------------------------------
         // data
         // -------------------------------------------------------------------------------

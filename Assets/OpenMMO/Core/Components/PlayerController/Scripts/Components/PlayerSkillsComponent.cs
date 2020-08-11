@@ -1,3 +1,4 @@
+using System;
 //using System;
 //using System.Text;
 //using System.Collections.Generic;
@@ -18,7 +19,8 @@ namespace OpenMMO
     public partial class PlayerControllerComponent
     {
 
-        bool clickedSkill;
+        SkillTemplate clickedSkill;
+        bool isButtonClicked;
 
         private void UpdateClient_skills()
         {
@@ -32,8 +34,7 @@ namespace OpenMMO
             {
                 if (currentTarget)
                 {
-                    // Debug.Log("Skill clicked !");
-                    clickedSkill = true;
+                    isButtonClicked = true;
                 }
             }
 
@@ -42,20 +43,29 @@ namespace OpenMMO
         // updates server
         private void FixedUpdateClient_skills()
         {
-            if (isLocalPlayer && clickedSkill)
+            if (isLocalPlayer && isButtonClicked)
             {
                 if (currentTarget.GetComponent<PlayerControllerComponent>().isDead())
                 {
                     onTargetButtonClicked();
                 }
-                clickedSkill = false;
                 onSkillClicked();
+                isButtonClicked = false;
             }
         }
 
         public void onSkillClicked()
         {
-            Cmd_UpdateSkill();
+            if (characterClass.skillsList.Count > 0)
+            {
+
+                clickedSkill = characterClass.skillsList[0];
+                Cmd_UpdateSkill(clickedSkill.hash);
+            }
+            else
+            {
+                Debug.Log("character skills list is empty !");
+            }
         }
 
         // -------------------------------------------------------------------------------
@@ -65,25 +75,34 @@ namespace OpenMMO
         /// <summary>Sends movement state to the server, where the server updates velocity, then returns updated position info to clients.</summary>
         /// <param name="moveState"></param>
         [Command]
-        protected virtual void Cmd_UpdateSkill()
+        protected virtual void Cmd_UpdateSkill(int skill_hash)
         {
 
             // validate can hit
             // return casting percent
             // make enemy health lower by skill power
-            bool success = false;
+            string result = "success";
 
             if (currentTarget)
             {
 
                 PlayerControllerComponent pc = currentTarget.GetComponent<PlayerControllerComponent>();
 
-                pc.takeDamage(10);
+                SkillTemplate skill = characterClass.skillsList.Find(item => item.hash == skill_hash);
 
-                success = true;
+                if (skill)
+                {
+                    pc.takeDamage(skill.baseImpact);
+                }
+                else
+                {
+                    result = "Could not find skill";
+                }
+
+
             }
 
-            RpcCorrectClientSkillHit(success);
+            RpcCorrectClientSkillHit(result);
         }
 
         // -------------------------------------------------------------------------------
@@ -93,9 +112,10 @@ namespace OpenMMO
         // -------------------------------------------------------------------------------
         /// <summary>Corrects the Client's position based upon the Server's interpretation of the simulation.</summary>
         [ClientRpc]
-        public void RpcCorrectClientSkillHit(bool clickedSkill)
+        public void RpcCorrectClientSkillHit(string result)
         {
 
+            Debug.Log("YAADM: results: " + result);
             if (isLocalPlayer) return; //IGNORE LOCAL CLIENTS //TODO: Are we positive that local player does not need correction?
         }
     }

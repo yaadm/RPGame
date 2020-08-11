@@ -156,7 +156,7 @@ MonoBehaviour:
   agent: {fileID: 8539800676653855757}
   proxChecker: {fileID: 3491147312615218762}
   collider: {fileID: 1876589497079288841}
-  archeType: {fileID: 11400000, guid: 346fc870660af4c20b3c541ddf54a996, type: 2}
+  archeType: {fileID: 0}
   controllerComponent: {fileID: 0}
   baseCooldown: 1
   startingZone: {fileID: 11400000, guid: 4616c8d9bd57d43408aef451724a0883, type: 2}
@@ -183,9 +183,9 @@ MonoBehaviour:
   currentHealth: 0
   totalMana: 0
   currentMana: 0
+  characterClass: {fileID: 11400000, guid: 61c9c0c7f1d2c8442b27087715da3f95, type: 2}
   controllerConfig: {fileID: 11400000, guid: 42c68c1577850d24e8c89bf1d146e357, type: 2}
   movementUpdateInterval: 0.009999999776482582
-  skill: {fileID: 11400000, guid: e780f90119fc93946b642d1ddbe99f3b, type: 2}
   currentTarget: {fileID: 0}
   minClickDistance: 5
 --- !u!114 &-272401145901597495

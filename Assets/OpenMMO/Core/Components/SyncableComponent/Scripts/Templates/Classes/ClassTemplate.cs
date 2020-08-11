@@ -16,9 +16,11 @@ namespace OpenMMO
     public partial class ClassTemplate : IterateableTemplate
     {
 
-        /*
-    		Reserved for future functionality
-    	*/
+        public List<SkillTemplate> skillsList;
+
+        public string clothesPrefabNameDefault;
+
+        public string prefabDefaultWeaponName;
 
         // -------------------------------------------------------------------------------
 

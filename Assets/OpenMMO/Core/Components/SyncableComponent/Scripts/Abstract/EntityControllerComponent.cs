@@ -48,13 +48,14 @@ namespace OpenMMO
         [SyncVar]
         public int currentMana;
 
+        public ClassTemplate characterClass;
+
         // -------------------------------------------------------------------------------
         // Start
         // @Server / @Client
         // -------------------------------------------------------------------------------
         protected override void Start()
         {
-
             agent = GetComponent<NavMeshAgent>();
             animator = GetComponent<Animator>();
             playerRigidbody.GetComponent<Rigidbody>();

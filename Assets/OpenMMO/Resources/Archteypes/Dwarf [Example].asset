@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: abb5ac7c361cf8544abe518d67647905, type: 3}
   m_Name: Dwarf [Example]
   m_EditorClassIdentifier: 
-  title: Dwarf
+  title: Dwarf [Example]
   folderName: Archetypes
   sortCategory: 
   sortOrder: 0
