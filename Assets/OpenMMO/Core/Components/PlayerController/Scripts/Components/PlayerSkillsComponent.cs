@@ -30,13 +30,16 @@ namespace OpenMMO
                 return;
             }
 
-            if (Input.GetKeyDown(controllerConfig.skillbarSlot_0))
-            {
-                if (currentTarget)
-                {
-                    isButtonClicked = true;
-                }
-            }
+            // TODO: move this logic to SkillBar Script
+
+            // if (Input.GetKeyDown(controllerConfig.skillbarSlot_0))
+            // {
+            //     if (currentTarget)
+            //     {
+            //         // TODO: resolve Actual skill vs button clicked (shortcut screen)
+            //         isButtonClicked = true;
+            //     }
+            // }
 
         }
 
@@ -49,22 +52,20 @@ namespace OpenMMO
                 {
                     onTargetButtonClicked();
                 }
-                onSkillClicked();
+                // onSkillClicked();
                 isButtonClicked = false;
             }
         }
 
-        public void onSkillClicked()
+        public void onSkillClicked(SkillTemplate skill)
         {
-            if (characterClass.skillsList.Count > 0)
+            if (skill)
             {
-
-                clickedSkill = characterClass.skillsList[0];
-                Cmd_UpdateSkill(clickedSkill.hash);
+                Cmd_UpdateSkill(skill.hash);
             }
             else
             {
-                Debug.Log("character skills list is empty !");
+                Debug.Log("no skill to activate !");
             }
         }
 
@@ -115,7 +116,6 @@ namespace OpenMMO
         public void RpcCorrectClientSkillHit(string result)
         {
 
-            Debug.Log("YAADM: results: " + result);
             if (isLocalPlayer) return; //IGNORE LOCAL CLIENTS //TODO: Are we positive that local player does not need correction?
         }
     }

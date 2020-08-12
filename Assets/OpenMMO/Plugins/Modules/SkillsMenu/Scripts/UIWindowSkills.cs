@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using OpenMMO.UI;
 
-namespace OpenMMO.Chat
+namespace OpenMMO.SkillsMenu
 {
 
     // ===================================================================================
@@ -55,11 +55,9 @@ namespace OpenMMO.Chat
 
             PlayerControllerComponent pcc = PlayerComponent.localPlayer.GetComponent<PlayerControllerComponent>();
 
-            Debug.Log("skills count: " + pcc.characterClass.skillsList.Count);
-
             foreach (SkillTemplate skill in pcc.characterClass.skillsList)
             {
-                GameObject go = Instantiate(skillEntryPrefab.gameObject, contentViewport.transform, false);
+                GameObject go = Instantiate(skillEntryPrefab.gameObject, contentViewport.transform, true);
 
                 go.GetComponent<UISkillMenuSlot>().Init(skill);
 
@@ -68,13 +66,14 @@ namespace OpenMMO.Chat
                 Canvas.ForceUpdateCanvases();
 
                 // do we need this ? (i think its for scrolling down when getting new item.. if true, DELETE it)
-                scrollRect.verticalNormalizedPosition = 0;
+                //scrollRect.verticalNormalizedPosition = 0;
             }
         }
 
         void OnSkillSelected(SkillTemplate skill)
         {
             // populate skill details screen
+            Debug.Log("OnSkill Selected: " + skill.name);
         }
 
         // -------------------------------------------------------------------------------
@@ -105,8 +104,10 @@ namespace OpenMMO.Chat
         {
             if (!networkManager || networkManager.state != Network.NetworkState.Game)
                 Hide();
-            else
-                Show();
+            // else
+            //     Show();
+
+            //YAADM TODO: remove the show from all the others ??? im positive...
         }
     }
 

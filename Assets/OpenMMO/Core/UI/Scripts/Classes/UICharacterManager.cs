@@ -83,19 +83,24 @@ namespace OpenMMO.UI
                 }
             });
 
-            BasicAttack.onClick.SetListener(() =>
-            {
-                if (playerController)
-                {
+            // BasicAttack.onClick.SetListener(() =>
+            // {
+            //     if (playerController)
+            //     {
 
-                    playerController.onSkillClicked();
-                }
-                else
-                {
+            //         playerController.onSkillClicked();
+            //     }
+            //     else
+            //     {
 
-                    Debug.LogError("No targetingComponent !");
-                }
-            });
+            //         Debug.LogError("No targetingComponent !");
+            //     }
+            // });
+        }
+
+        public void onSkillClicked(SkillTemplate skill)
+        {
+            playerController.onSkillClicked(skill);
         }
 
         void LateUpdate()
@@ -121,8 +126,6 @@ namespace OpenMMO.UI
             onTargetLateUpdate();
 
             onPortraitLateUpdate();
-
-            onSkillsBarLateUpdate();
         }
 
     }

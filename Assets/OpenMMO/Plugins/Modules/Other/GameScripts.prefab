@@ -46,13 +46,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   myName: {fileID: 0}
   myHealthBar: {fileID: 0}
+  myHealthText: {fileID: 0}
   myManaBar: {fileID: 0}
   Skillsbar: {fileID: 0}
+  BasicAttack: {fileID: 0}
   targetButton: {fileID: 0}
   targetPannel: {fileID: 0}
   targetName: {fileID: 0}
-  healthBar: {fileID: 0}
-  manaBar: {fileID: 0}
+  targetHealthBar: {fileID: 0}
+  targetHealthText: {fileID: 0}
+  targetManaBar: {fileID: 0}
 --- !u!114 &7755883788204470827
 MonoBehaviour:
   m_ObjectHideFlags: 0

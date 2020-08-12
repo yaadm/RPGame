@@ -4811,7 +4811,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   root: {fileID: 7430902691189868429}
-  hideOnAwake: 1
+  hideOnAwake: 0
   eventShow:
     m_PersistentCalls:
       m_Calls: []

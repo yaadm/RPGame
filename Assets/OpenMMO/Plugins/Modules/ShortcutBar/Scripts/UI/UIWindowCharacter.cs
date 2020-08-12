@@ -2,12 +2,12 @@
 using UnityEngine;
 using OpenMMO.UI;
 
-namespace OpenMMO.Chracter
+namespace OpenMMO.Character
 {
     [DisallowMultipleComponent]
     public partial class UIWindowCharacter : UIRoot
     {
-        [Header("Chracter Panel")]
+        [Header("Character Panel")]
         public GameObject characterPanel;
 
         public static UIWindowCharacter singleton;

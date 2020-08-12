@@ -39,9 +39,15 @@ public abstract partial class UIBase : MonoBehaviour
         isAwaken = true;
         ValidateRoot();
         if (uiExtension != null)
-            uiExtension.Show();
+        {
+
+            if (!uiExtension.IsVisible()) uiExtension.Show();
+        }
         else
-            root.SetActive(true);
+        {
+
+            if (!root.activeSelf) root.SetActive(true);
+        }
         eventShow.Invoke();
     }
 
