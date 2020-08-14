@@ -33,6 +33,10 @@ namespace OpenMMO
         //RUN
         protected bool running;
         protected bool jump;
+        protected bool isJumpingUp;
+        protected bool isFalling;
+
+        private float lerp = 0f;
 
 
         private void UpdateClient_movement()
@@ -48,7 +52,11 @@ namespace OpenMMO
                 running = !running;
             }
 
-            jump = Input.GetKeyDown(controllerConfig.jumpKey);
+            if (Input.GetKeyDown(controllerConfig.jumpKey))
+            {
+                jump = true;
+                isJumpingUp = true;
+            }
 
             UpdateVelocity(); //UPDATE VELOCITY
         }
@@ -63,9 +71,18 @@ namespace OpenMMO
 
             if (isDead())
             {
-                // stop moving (X,Z) axis on death.
-                Vector3 newVelocity = new Vector3(0, playerRigidbody.velocity.y, 0);
-                playerRigidbody.velocity = newVelocity;
+
+                if (agent && agent.isActiveAndEnabled)
+                {
+                    agent.velocity = Vector3.zero;
+                }
+                else
+                {
+                    // stop moving (X,Z) axis on death.
+                    Vector3 newVelocity = new Vector3(0, playerRigidbody.velocity.y, 0);
+                    playerRigidbody.velocity = newVelocity;
+                }
+
 
                 return;
             }
@@ -89,7 +106,7 @@ namespace OpenMMO
                 // calc movement speed factor
 
                 float factor = 0;
-                if (isPlayerGrounded)
+                if (isPlayerGrounded || (agent && agent.isActiveAndEnabled)) // Dont slow down to air speed on jump when using agent.
                 {
                     factor = running ? controllerConfig.runSpeedScale : controllerConfig.walkSpeedScale;
                 }
@@ -105,11 +122,10 @@ namespace OpenMMO
 
                 if (agent && agent.isActiveAndEnabled)
                 {
-                    agent.Move(newVelocity);
+                    agent.velocity = newVelocity;
                 }
                 else
                 {
-
                     // dont affect current Y axis velocity
                     newVelocity.y = playerRigidbody.velocity.y;
                     playerRigidbody.velocity = newVelocity;
@@ -117,32 +133,87 @@ namespace OpenMMO
             }
             else
             {
-                // stop movement !
-                // dont affect current Y axis velocity
-                Vector3 newVelocity = new Vector3(0, playerRigidbody.velocity.y, 0);
-                playerRigidbody.velocity = newVelocity;
-            }
 
-
-
-            if (jump && isPlayerGrounded)
-            {
-                jump = false;
 
                 if (agent && agent.isActiveAndEnabled)
                 {
-
-                    // NavMeshAgent cant Jump ! - as far as we know :) 
-                    // maybe try YOffset ?
-                    agent.velocity += Vector3.up * agent.speed * controllerConfig.jumpSpeedScale * controllerConfig.jumpSpeedMultiplier;
+                    // jump in agent is not velocity its baseOffset so.. zero all.
+                    agent.velocity = Vector3.zero;
                 }
                 else
                 {
-
-                    playerRigidbody.AddForce(0, agent.speed * controllerConfig.jumpSpeedScale * controllerConfig.jumpSpeedMultiplier, 0, ForceMode.Impulse);
+                    // stop movement !
+                    // dont affect current Y axis velocity
+                    Vector3 newVelocity = new Vector3(0, playerRigidbody.velocity.y, 0);
+                    playerRigidbody.velocity = newVelocity;
                 }
             }
 
+
+
+            if (jump)
+            {
+                if (agent && agent.isActiveAndEnabled)
+                {
+
+                    float speed = agent.speed * controllerConfig.jumpSpeedScale * controllerConfig.jumpSpeedMultiplier;
+
+                    if (isFalling)
+                    {
+                        // Falling Down
+                        lerp += Time.deltaTime / (controllerConfig.jumpAnimationDuration / 2f); // jumping up is half of the animation time
+                        agent.baseOffset = Mathf.SmoothStep(controllerConfig.jumpHeight, 0f, lerp);
+                        if (lerp >= .99f)
+                        {
+                            lerp = 0;
+                            isJumpingUp = false;
+                            isFalling = false;
+                        }
+                    }
+                    else if (isJumpingUp)
+                    {
+                        // Jumping Up
+                        lerp += Time.deltaTime / (controllerConfig.jumpAnimationDuration / 2f); // jumping up is half of the animation time
+                        agent.baseOffset = Mathf.SmoothStep(0f, controllerConfig.jumpHeight, lerp);
+                        // finished animation
+                        if (lerp >= .99f)
+                        {
+                            lerp = 0;
+                            isJumpingUp = false;
+                            isFalling = true;
+                        }
+                        if (isPlayerGrounded)
+                        {
+                            isPlayerGrounded = false;
+                        }
+
+                    }
+                    else if (!isJumpingUp && !isFalling)
+                    {
+                        // stopped jumping
+                        jump = false;
+                        isPlayerGrounded = true;
+                        agent.baseOffset = 0;
+                    }
+                }
+                else
+                {
+                    jump = false;
+                    if (isPlayerGrounded)
+                    {
+                        playerRigidbody.AddForce(0, agent.speed * controllerConfig.jumpSpeedScale * controllerConfig.jumpSpeedMultiplier, 0, ForceMode.Impulse);
+                    }
+                }
+            }
+            else
+            {
+                if (!isPlayerGrounded && (agent && agent.isActiveAndEnabled))
+                {
+                    // mostly used for initial value.. could just change the default value there ?
+                    agent.baseOffset = 0;
+                    isPlayerGrounded = true;
+                }
+            }
         }
 
 
@@ -173,7 +244,16 @@ namespace OpenMMO
             verticalMovementInput = Mathf.Clamp(moveState.verticalMovementInput, -1, 1);        // good enough for keyboard + controller
             horizontalMovementInput = Mathf.Clamp(moveState.horizontalMovementInput, -1, 1);    // good enough for keyboard + controller
             running = moveState.movementRunning;
-            jump = moveState.movementJump;
+
+            if (moveState.movementJump)
+            {
+                jump = true;
+                if (isPlayerGrounded)
+                {
+                    // activate baseoffset animation
+                    isJumpingUp = true;
+                }
+            }
 
             cameraYRotation = moveState.cameraYRotation;
 
@@ -182,12 +262,12 @@ namespace OpenMMO
             if (agent && agent.isActiveAndEnabled)
             {
 
-                RpcCorrectClientPosition(transform.position, transform.rotation, agent.velocity);
+                RpcCorrectClientPosition(transform.position, transform.rotation, agent.velocity, agent.baseOffset);
             }
             else
             {
-
-                RpcCorrectClientPosition(transform.position, transform.rotation, playerRigidbody.velocity);
+                // jump position is irrelevant here, we are usgin forces as Rigidbody
+                RpcCorrectClientPosition(transform.position, transform.rotation, playerRigidbody.velocity, 0);
             }
         }
 
@@ -198,7 +278,7 @@ namespace OpenMMO
         // -------------------------------------------------------------------------------
         /// <summary>Corrects the Client's position based upon the Server's interpretation of the simulation.</summary>
         [ClientRpc]
-        public void RpcCorrectClientPosition(Vector3 _position, Quaternion _rotation, Vector3 _velocity)
+        public void RpcCorrectClientPosition(Vector3 _position, Quaternion _rotation, Vector3 _velocity, float baseOffset)
         {
             if (isLocalPlayer) return; //IGNORE LOCAL CLIENTS //TODO: Are we positive that local player does not need correction?
 
@@ -206,6 +286,7 @@ namespace OpenMMO
             {
 
                 agent.ResetPath();
+                // Debug.Log("received baseOffset: " + jumpPosition);
 
                 // if we will need this feature, try using velocity only and remove position.
                 // update position only if client _position.DistanceTo(transform.position) > Delta (allowed 
@@ -215,7 +296,8 @@ namespace OpenMMO
                 //agent.velocity = _velocity;
 
                 //transform.position = _position;
-                agent.Move(_velocity);
+                agent.velocity = _velocity;
+                agent.baseOffset = baseOffset;
                 transform.rotation = _rotation;
 
                 // TODO: check if Server Player Position is unsynced to the client position and fix position ?

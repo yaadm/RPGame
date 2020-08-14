@@ -32,6 +32,10 @@ namespace OpenMMO.Zones
         public NetworkZoneTemplate mainZone;
         public List<NetworkZoneTemplate> subZones;
 
+        public List<NetworkZoneTemplate> instancesZones;
+
+
+
         [Header("Settings")]
         [Tooltip("MainZone data save interval (in seconds)")]
         public float zoneIntervalMain = 60f;
@@ -206,6 +210,9 @@ namespace OpenMMO.Zones
 
         }
 
+        // YAADM: TODO: add function to spawn the InstanceScene from the list (dont forget to random the port and add uuid to new instance)
+        // add timer to new instance ? (expires after 30 min ?)
+
         // -------------------------------------------------------------------------------
         // SpawnSubZone
         // -------------------------------------------------------------------------------
@@ -241,6 +248,8 @@ namespace OpenMMO.Zones
             {
                 //process.StartInfo.FileName = "server" + "." + extension.ToString(); //LINUX and WINDOWS
                 //TODO: This is a potential fix for the server executable being locked into requiring a specific name.
+
+                //YAADM: Windows server fixed.
                 process.StartInfo.FileName = Path.GetFileNameWithoutExtension(Tools.GetProcessPath) + Path.GetExtension(Tools.GetProcessPath);
             }
             process.StartInfo.Arguments = argZoneIndex + " " + index.ToString();

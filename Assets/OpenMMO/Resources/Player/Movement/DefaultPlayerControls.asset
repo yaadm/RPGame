@@ -18,7 +18,11 @@ MonoBehaviour:
   jumpKey: 32
   targetKey: 9
   moveSpeedMultiplier: 3
-  jumpSpeedMultiplier: 4
   walkSpeedScale: 1.5
   runSpeedScale: 3
+  moveInAirSpeedScale: 0.2
+  skillbarSlot_0: 257
+  jumpSpeedMultiplier: 4
   jumpSpeedScale: 3
+  jumpAnimationDuration: 0.7
+  jumpHeight: 2

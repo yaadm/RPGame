@@ -104,10 +104,8 @@ namespace OpenMMO.SkillsMenu
         {
             if (!networkManager || networkManager.state != Network.NetworkState.Game)
                 Hide();
-            // else
-            //     Show();
-
-            //YAADM TODO: remove the show from all the others ??? im positive...
+            else
+                Show();
         }
     }
 

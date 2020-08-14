@@ -47,8 +47,7 @@ namespace OpenMMO
         [Tooltip("How fast you can move.")]
         [Range(0, 10)] public float moveSpeedMultiplier = 1.0f;
 
-        [Tooltip("How fast you can jump.")]
-        [Range(0, 10)] public float jumpSpeedMultiplier = 3.0f;
+
 
         [Header("Move Speed Scale")]
         //WALK
@@ -58,14 +57,27 @@ namespace OpenMMO
         [Tooltip("Scales speed while running. 1.0f = normal speed")]
         [Range(0, 10)] public float runSpeedScale = 1.5f;
         //JUMP
-        [Tooltip("Scales speed while running. 1.0f = normal speed")]
-        [Range(0, 10)] public float jumpSpeedScale = 2f;
+
         //JUMP
         [Tooltip("Scales speed while running. 1.0f = normal speed")]
         [Range(0, 10)] public float moveInAirSpeedScale = .2f;
 
         [Header("Skills Input Keys")]
         public KeyCode skillbarSlot_0 = KeyCode.Keypad1;
+
+        [Header("For RigidBody ONLY !")]
+        [Tooltip("How fast you can jump.")]
+        [Range(0, 10)] public float jumpSpeedMultiplier = 3.0f;
+
+        [Tooltip("Scales speed while running. 1.0f = normal speed")]
+        [Range(0, 10)] public float jumpSpeedScale = 2f;
+
+        [Header("For NavMesh Agent ONLY !")]
+        [Tooltip("How long the jump animation will last (in seconds)")]
+        [Range(0, 5)] public float jumpAnimationDuration = 0.5f;
+
+        [Tooltip("How far up the jump animation will go")]
+        [Range(1, 5)] public float jumpHeight = 2f;
 
     }
 }
